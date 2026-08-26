@@ -11,7 +11,7 @@ export async function askGemini({
     prompt,
 }) {
     if (!prompt) {
-        throw new Error("Gemini prompt is required");
+        throw new Error("User prompt is required");
     }
 
     const interaction = await ai.interactions.create({

@@ -1,4 +1,4 @@
-import { askGemini } from "@/services/gemini";
+import { askLLM } from "@/services/llm";
 
 export async function GET() {
   console.log("1. Route started");
@@ -6,8 +6,8 @@ export async function GET() {
   try {
     console.log("2. Calling Gemini");
 
-    const response = await askGemini({
-      prompt: "What is Gemini?",
+    const response = await askLLM({
+      prompt: "What is LLM?",
     });
 
     console.log("3. Gemini responded");
