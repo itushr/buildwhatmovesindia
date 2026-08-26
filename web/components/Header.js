@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDownIcon, LogoIndia, UserIcon, GlobeIcon, AnimatedMenuIcon } from './Icons';
@@ -10,7 +11,27 @@ import { useApp } from '../context/AppContext';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { language, setLanguage, fontSize, setFontSize, t } = useApp();
+  const [hoveredNav, setHoveredNav] = useState(null);
+  const { language, setLanguage, fontSize, setFontSize, openWorkflowModal, t } = useApp();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isActive = (path) => {
+    if (!path || !pathname) return false;
+    if (path === '/') return pathname === '/';
+    if (path === '/faqs') return pathname.startsWith('/faqs') || pathname.startsWith('/faq');
+    if (path === '/contact') return pathname.startsWith('/contact');
+    return pathname.startsWith(path);
+  };
+
+  const navItems = [
+    { key: 'home', label: t.header.nav.home, href: '/' },
+    // { key: 'getInformation', label: t.header.nav.getInformation, href: '/get-information' },
+    { key: 'fileRTI', label: t.header.nav.fileRTI, href: '/submit-request' },
+    { key: 'guide', label: t.header.nav.guide, href: '/guide' },
+    { key: 'faqs', label: t.header.nav.faqs, href: '/faqs' },
+    { key: 'contact', label: t.header.nav.contact, href: '/contact' },
+  ];
 
   return (
     <header className="w-full bg-white border-b border-gray-200/80 sticky top-0 z-50 shadow-2xs">
@@ -93,26 +114,89 @@ export default function Header() {
 
         {/* Right Side Controls (Language Toggle + Desktop Links + Hamburger Menu) */}
         <div className="flex items-stretch gap-2 sm:gap-3 lg:gap-6 shrink-0">
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-stretch gap-5 xl:gap-7 text-sm font-medium text-gray-700">
-            <Link href="/" className="text-[#2563EB] font-semibold relative flex items-center h-full py-4 after:absolute after:bottom-0 after:-left-1 after:-right-1 after:h-[4.5px] after:bg-[#2563EB] after:rounded-t-md after:rounded-b-none">
-              {t.header.nav.home}
-            </Link>
-            <Link href="#" className="hover:text-[#2563EB] flex items-center h-full py-4 transition-colors whitespace-nowrap">
-              {t.header.nav.getInformation}
-            </Link>
-            <Link href="/submit-request" className="hover:text-[#2563EB] flex items-center h-full py-4 transition-colors whitespace-nowrap">
-              {t.header.nav.fileRTI}
-            </Link>
-            <Link href="#" className="hover:text-[#2563EB] flex items-center h-full py-4 transition-colors whitespace-nowrap">
-              {t.header.nav.guide}
-            </Link>
-            <Link href="#" className="hover:text-[#2563EB] flex items-center h-full py-4 transition-colors whitespace-nowrap">
-              {t.header.nav.faqs}
-            </Link>
-            <Link href="#" className="hover:text-[#2563EB] flex items-center h-full py-4 transition-colors whitespace-nowrap">
-              {t.header.nav.contact}
-            </Link>
+          {/* Desktop Navigation Links with Smooth Animated Active & Hover Highlights */}
+          <nav 
+            onMouseLeave={() => setHoveredNav(null)}
+            className="hidden lg:flex items-stretch gap-1 xl:gap-2 text-sm font-medium text-gray-700 relative"
+          >
+            {navItems.map((item) => {
+              const active = isActive(item.href);
+              const isHovered = hoveredNav === item.key;
+
+              const content = (
+                <span className="relative z-10 px-3 py-1.5">
+                  {item.label}
+                </span>
+              );
+
+              const innerContent = (
+                <>
+                  {/* Floating Hover Backdrop Pill */}
+                  {isHovered && (
+                    <motion.div
+                      layoutId="navbar-hover-pill"
+                      className="absolute inset-x-1 inset-y-5 bg-slate-100/90 rounded-lg -z-0"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 38,
+                        mass: 0.6
+                      }}
+                    />
+                  )}
+
+                  {/* Active Indicator Underline with Shared Layout Animation */}
+                  {active && (
+                    <motion.div
+                      layoutId="navbar-active-indicator"
+                      className="absolute bottom-0 left-1 right-1 h-[3.5px] bg-[#2563EB] rounded-t-md shadow-[0_-1px_6px_rgba(37,99,235,0.35)] z-20"
+                      transition={{
+                        type: "spring",
+                        stiffness: 450,
+                        damping: 35,
+                        mass: 0.8
+                      }}
+                    />
+                  )}
+
+                  {content}
+                </>
+              );
+
+              const commonClasses = `relative flex items-center h-full py-4 transition-colors duration-200 whitespace-nowrap cursor-pointer select-none ${
+                active 
+                  ? "text-[#2563EB] font-semibold" 
+                  : "text-gray-700 hover:text-[#2563EB] font-medium"
+              }`;
+
+              if (item.href) {
+                return (
+                  <Link
+                    key={item.key}
+                    href={item.href}
+                    onMouseEnter={() => setHoveredNav(item.key)}
+                    className={commonClasses}
+                  >
+                    {innerContent}
+                  </Link>
+                );
+              }
+
+              return (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={item.action}
+                  onMouseEnter={() => setHoveredNav(item.key)}
+                  className={commonClasses}
+                >
+                  {innerContent}
+                </button>
+              );
+            })}
           </nav>
 
           {/* Radix UI Headless Accessible Language Dropdown */}
@@ -158,14 +242,18 @@ export default function Header() {
 
           {/* Login CTA Button on Desktop */}
           <div className="hidden lg:block pl-3 border-l border-gray-200 my-auto">
-            <button className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer whitespace-nowrap">
+            <Link 
+              href="/login"
+              className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer whitespace-nowrap"
+            >
               <UserIcon className="w-4 h-4 text-white" />
               <span>{t.header.nav.login}</span>
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Three-Line Menu Bar */}
           <button 
+            type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden p-1.5 text-gray-700 hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer my-auto flex items-center justify-center"
             aria-label="Toggle navigation menu"
@@ -183,60 +271,48 @@ export default function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             className="lg:hidden overflow-hidden border-t border-gray-200/80 bg-white"
           >
             <div className="min-h-0 bg-white px-4 py-4 shadow-lg">
               <nav className="flex flex-col gap-1 text-sm font-medium text-gray-700">
-                <Link 
-                  href="/" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-md bg-blue-50 text-[#2563EB] font-semibold"
-                >
-                  {t.header.nav.home}
-                </Link>
-                <Link 
-                  href="#" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-[#2563EB]"
-                >
-                  {t.header.nav.getInformation}
-                </Link>
-                <Link 
-                  href="/submit-request" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-[#2563EB]"
-                >
-                  {t.header.nav.fileRTI}
-                </Link>
-                <Link 
-                  href="#" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-[#2563EB]"
-                >
-                  {t.header.nav.guide}
-                </Link>
-                <Link 
-                  href="#" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-[#2563EB]"
-                >
-                  {t.header.nav.faqs}
-                </Link>
-                <Link 
-                  href="#" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-[#2563EB]"
-                >
-                  {t.header.nav.contact}
-                </Link>
+                {navItems.map((item, index) => {
+                  const active = isActive(item.href);
+
+                  const linkClasses = `relative block px-3.5 py-2.5 rounded-lg text-left transition-all duration-150 ${
+                    active 
+                      ? 'bg-blue-50 text-[#2563EB] font-semibold border-l-4 border-[#2563EB]' 
+                      : 'hover:bg-gray-50 hover:text-[#2563EB] text-gray-700'
+                  }`;
+
+                  return (
+                    <motion.div
+                      key={item.key}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.035, duration: 0.2 }}
+                    >
+                      <Link 
+                        href={item.href} 
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={linkClasses}
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
               </nav>
 
               <div className="mt-4 pt-3 border-t border-gray-100 flex flex-col gap-2">
-                <button className="w-full flex items-center justify-center gap-2 bg-[#2563EB] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer">
+                <Link 
+                  href="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-full flex items-center justify-center gap-2 bg-[#2563EB] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer"
+                >
                   <UserIcon className="w-4 h-4 text-white" />
                   <span>{t.header.nav.login}</span>
-                </button>
+                </Link>
               </div>
             </div>
           </motion.div>
@@ -245,3 +321,4 @@ export default function Header() {
     </header>
   );
 }
+

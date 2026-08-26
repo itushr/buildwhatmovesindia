@@ -74,9 +74,9 @@ export default function Footer() {
               <ul className="flex flex-col gap-2.5 text-xs text-slate-400">
                 <li><Link href="/" className="hover:text-white transition-colors">{t.footer.links.home}</Link></li>
                 <li><Link href="/submit-request" className="hover:text-white transition-colors">{t.footer.links.fileRTI}</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">{t.footer.links.myRequests}</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">{t.footer.links.help}</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">{t.footer.links.contactUs}</Link></li>
+                <li><Link href="/my-requests" className="hover:text-white transition-colors">{t.footer.links.myRequests}</Link></li>
+                <li><Link href="/help" className="hover:text-white transition-colors">{t.footer.links.help}</Link></li>
+                <li><Link href="/contact-us" className="hover:text-white transition-colors">{t.footer.links.contactUs}</Link></li>
               </ul>
             </div>
 
@@ -84,11 +84,11 @@ export default function Footer() {
             <div className="md:col-span-2 flex flex-col gap-3.5">
               <h3 className="text-xs font-semibold text-white uppercase tracking-wider">{t.footer.resources}</h3>
               <ul className="flex flex-col gap-2.5 text-xs text-slate-400">
-                <li><Link href="#" className="hover:text-white transition-colors">{t.footer.links.act}</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">{t.footer.links.rules}</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">{t.footer.links.cic}</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">{t.footer.links.cpgrams}</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">{t.footer.links.directory}</Link></li>
+                <li><Link href="/act" className="hover:text-white transition-colors">{t.footer.links.act}</Link></li>
+                <li><Link href="/rules" className="hover:text-white transition-colors">{t.footer.links.rules}</Link></li>
+                <li><Link href="/cic" className="hover:text-white transition-colors">{t.footer.links.cic}</Link></li>
+                <li><Link href="/cpgrams" className="hover:text-white transition-colors">{t.footer.links.cpgrams}</Link></li>
+                <li><Link href="/directory" className="hover:text-white transition-colors">{t.footer.links.directory}</Link></li>
               </ul>
             </div>
 
@@ -106,7 +106,7 @@ export default function Footer() {
                 </li>
                 <li className="flex gap-2.5 items-center">
                   <Mail className="w-4 h-4 text-slate-400 shrink-0" />
-                  <a href="mailto:support-rti@gov.in" className="hover:text-white transition-colors">{t.footer.email}</a>
+                  <a href={`mailto:${t.footer.email}`} className="hover:text-white transition-colors">{t.footer.email}</a>
                 </li>
                 <li className="flex gap-2.5 items-center">
                   <Clock className="w-4 h-4 text-slate-400 shrink-0" />
@@ -126,11 +126,11 @@ export default function Footer() {
           <p className="text-center md:text-left">{t.footer.copyright}</p>
 
           <div className="flex flex-wrap items-center justify-center gap-y-1.5 gap-x-2 sm:gap-x-3 text-xs text-slate-400">
-            <Link href="#" className="hover:text-slate-200 transition-colors whitespace-nowrap">{t.footer.links.privacy}</Link>
+            <Link href="/privacy" className="hover:text-slate-200 transition-colors whitespace-nowrap">{t.footer.links.privacy}</Link>
             <span className="text-slate-600 select-none">·</span>
-            <Link href="#" className="hover:text-slate-200 transition-colors whitespace-nowrap">{t.footer.links.terms}</Link>
+            <Link href="/terms" className="hover:text-slate-200 transition-colors whitespace-nowrap">{t.footer.links.terms}</Link>
             <span className="text-slate-600 select-none">·</span>
-            <Link href="#" className="hover:text-slate-200 transition-colors whitespace-nowrap">{t.footer.links.accessibility}</Link>
+            <Link href="/accessibility" className="hover:text-slate-200 transition-colors whitespace-nowrap">{t.footer.links.accessibility}</Link>
           </div>
 
           <div className="flex items-center justify-center gap-2">

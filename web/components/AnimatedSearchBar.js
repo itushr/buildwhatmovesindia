@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import { SearchIcon, XIcon } from "./Icons";
 import { useApp } from "../context/AppContext";
+
+const emptySubscribe = () => () => {};
 
 export default function AnimatedSearchBar({
   prompts: customPrompts,
@@ -18,13 +20,9 @@ export default function AnimatedSearchBar({
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [prevPrompts, setPrevPrompts] = useState(prompts);
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // Sync state during render if prompts prop changes (recommended React pattern without effect)
+  // Sync state during render if prompts prop changes
   if (prompts !== prevPrompts) {
     setPrevPrompts(prompts);
     setPromptIndex(0);
@@ -104,10 +102,11 @@ export default function AnimatedSearchBar({
   return (
     <form
       onSubmit={handleSubmit}
-      className={`w-full max-w-3xl flex items-stretch h-[56px] sm:h-[60px] rounded-xl shadow-xs border border-gray-200 focus-within:border-[#0B1C3F] focus-within:ring-4 focus-within:ring-[#0B1C3F]/5 bg-white transition-all duration-200 relative group overflow-hidden ${className}`}
+      className={`w-full max-w-3xl flex items-center h-[56px] sm:h-[60px] rounded-2xl border border-blue-300/80 bg-white p-1.5 mx-auto shadow-[0_4px_30px_-2px_rgba(29,104,242,0.26),0_0_18px_rgba(11,28,63,0.08)] hover:shadow-[0_6px_35px_-2px_rgba(29,104,242,0.34),0_0_24px_rgba(11,28,63,0.12)] hover:border-blue-400 focus-within:border-blue-600 focus-within:shadow-[0_8px_40px_-2px_rgba(29,104,242,0.4),0_0_28px_rgba(11,28,63,0.15)] focus-within:ring-4 focus-within:ring-blue-600/15 transition-all duration-300 relative group overflow-hidden ${className}`}
     >
-      <div className="relative flex-1 flex items-center min-w-0">
-        {/* Real Input Element */}
+      {/* Search Bar Body (White portion to the left of the search button) */}
+      <div className="relative flex-1 h-full flex items-center min-w-0">
+        {/* Real Input Element with Left Padding */}
         <input
           type="text"
           value={query}
@@ -116,20 +115,20 @@ export default function AnimatedSearchBar({
           onBlur={() => setIsFocused(false)}
           aria-label="Search public information or file an RTI"
           placeholder={showPlaceholderOverlay ? "" : (prompts[0] || t.searchBar.placeholder)}
-          className="w-full h-full bg-transparent px-6 text-slate-800 placeholder:text-slate-400/80 text-base font-normal outline-none z-10"
+          className="w-full h-full bg-transparent pl-6 sm:pl-7 pr-3 text-slate-800 placeholder:text-slate-400/80 text-base font-normal outline-none z-10 flex items-center leading-normal"
         />
 
-        {/* Animated Typewriter Placeholder Overlay */}
+        {/* Animated Typewriter Placeholder Overlay with Matching Left Padding */}
         <div
-          className={`absolute left-6 right-10 flex items-center pointer-events-none select-none z-0 transition-opacity duration-200 ${
+          className={`absolute inset-y-0 left-0 right-0 pl-6 sm:pl-7 pr-3 flex items-center pointer-events-none select-none z-0 transition-opacity duration-200 ${
             showPlaceholderOverlay ? "opacity-100" : "opacity-0"
           }`}
           aria-hidden="true"
         >
-          <span className="text-slate-400 text-base font-normal truncate max-w-full">
+          <span className="text-slate-400 text-base font-normal truncate max-w-full leading-normal">
             {displayText}
           </span>
-          <span className="inline-block w-[2px] h-[1.15em] bg-[#2563EB] align-middle ml-0.5 rounded-full animate-[pulse_1s_infinite]" />
+          <span className="inline-block w-[2px] h-[1.15em] bg-blue-600 align-middle ml-0.5 rounded-full animate-[pulse_1s_infinite]" />
         </div>
 
         {/* Clear Button when user types */}
@@ -146,13 +145,13 @@ export default function AnimatedSearchBar({
         )}
       </div>
 
-      {/* Navy Search Button */}
+      {/* Blue Inset Search Button (Rounded Square Button inside container) */}
       <button
         type="submit"
-        className="bg-[#04152D] hover:bg-[#082247] active:bg-[#020b18] text-white px-7 sm:px-10 rounded-r-[11px] flex items-center justify-center gap-2.5 font-medium transition-colors shrink-0 h-full z-10 cursor-pointer"
+        className="h-full aspect-square bg-[#1D68F2] hover:bg-[#1554C8] active:bg-[#1044A5] text-white rounded-xl flex items-center justify-center transition-colors shrink-0 cursor-pointer shadow-2xs ml-1"
+        aria-label="Search"
       >
         <SearchIcon className="w-5 h-5 text-white stroke-[2.2]" />
-        <span className="text-base font-medium hidden sm:inline">{t.searchBar.button}</span>
       </button>
     </form>
   );

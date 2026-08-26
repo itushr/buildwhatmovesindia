@@ -24,7 +24,7 @@ export default function CustomScrollbar() {
 
     const totalScrollable = scrollHeight - clientHeight;
 
-    if (totalScrollable <= 10) {
+    if (totalScrollable <= 10 || window.innerWidth < 768) {
       if (trackRef.current) trackRef.current.style.display = 'none';
       return;
     }
@@ -138,7 +138,7 @@ export default function CustomScrollbar() {
     <div
       ref={trackRef}
       style={{ display: 'none' }}
-      className="fixed right-0 top-0 bottom-0 w-4 z-[99999] pointer-events-auto flex justify-end pr-1 transition-opacity duration-300 ease-out select-none cursor-default"
+      className="hidden md:flex fixed right-0 top-0 bottom-0 w-4 z-[99999] pointer-events-auto justify-end pr-1 transition-opacity duration-300 ease-out select-none cursor-default"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

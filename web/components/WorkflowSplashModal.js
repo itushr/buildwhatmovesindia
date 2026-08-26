@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HelpCircle } from 'lucide-react';
@@ -15,7 +15,10 @@ import {
   XIcon
 } from './Icons';
 
+const emptySubscribe = () => () => {};
+
 export default function WorkflowSplashModal() {
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const { 
     isWorkflowModalOpen, 
     openWorkflowModal, 
@@ -26,6 +29,7 @@ export default function WorkflowSplashModal() {
 
   // Automatically open modal once on initial visit in this session
   useEffect(() => {
+    if (!mounted) return;
     try {
       const hasSeenSession = sessionStorage.getItem('rti_has_seen_workflow_session');
       const hasPermanentlyDismissed = localStorage.getItem('rti_has_dismissed_workflow_splash');
@@ -40,7 +44,7 @@ export default function WorkflowSplashModal() {
     } catch (e) {
       openWorkflowModal();
     }
-  }, [openWorkflowModal]);
+  }, [mounted, openWorkflowModal]);
 
   const handleClose = useCallback(() => {
     closeWorkflowModal();
@@ -111,29 +115,33 @@ export default function WorkflowSplashModal() {
     closeBtn: "Close Guide"
   };
 
+  if (!mounted) return null;
+
   return (
     <>
-      {/* Professional Floating Guide Button in Bottom-Right Corner */}
+      {/* Floating Citizen Guide Button with Full Glassmorphism & Sleek Mobile Circle */}
       <motion.button
+        suppressHydrationWarning
         initial={{ opacity: 0, scale: 0.9, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.97 }}
+        whileHover={{ scale: 1.04 }}
+        whileTap={{ scale: 0.96 }}
         onClick={openWorkflowModal}
-        className="fixed bottom-6 right-6 z-40 bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0B1C3F] border border-slate-300 shadow-md hover:shadow-lg shadow-slate-900/10 rounded-full px-4 py-2.5 flex items-center gap-2.5 text-xs font-bold tracking-wide transition-all cursor-pointer select-none group backdrop-blur-md"
-        aria-label="Open Portal Workflow Guide"
+        title={strings.floatingBtn}
+        aria-label={strings.floatingBtn || "How the Portal Works"}
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 print:hidden bg-white/40 hover:bg-white/60 active:bg-white/50 text-[#0B1C3F] border border-white/60 hover:border-white/90 shadow-[0_8px_32px_0_rgba(11,28,63,0.12),inset_0_1px_1px_0_rgba(255,255,255,0.7)] hover:shadow-[0_8px_32px_0_rgba(37,99,235,0.22),inset_0_1px_2px_0_rgba(255,255,255,0.9)] ring-1 ring-black/5 rounded-full w-9 h-9 sm:w-auto sm:h-auto p-0 sm:px-4 sm:py-2 flex items-center justify-center sm:gap-2.5 text-xs font-bold tracking-wide transition-all duration-200 cursor-pointer select-none group backdrop-blur-xl backdrop-saturate-180"
       >
-        <span className="w-5 h-5 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center border border-blue-200 group-hover:bg-blue-100 transition-colors">
+        <span className="w-5 h-5 rounded-full bg-blue-50/80 text-[#2563EB] flex items-center justify-center border border-blue-200/80 group-hover:bg-blue-100/90 group-hover:border-blue-300 transition-colors shrink-0 shadow-2xs">
           <HelpCircle className="w-3.5 h-3.5" strokeWidth={2.2} />
         </span>
-        <span>{strings.floatingBtn}</span>
+        <span className="hidden sm:inline whitespace-nowrap">{strings.floatingBtn}</span>
       </motion.button>
 
       {/* Centered Modal Pop-Up Dialog */}
       <AnimatePresence>
         {isWorkflowModalOpen && (
           <div 
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#0B1C3F]/50 backdrop-blur-xs overflow-y-auto"
+            className="fixed inset-0 z-50 print:hidden flex items-center justify-center p-4 sm:p-6 bg-[#0B1C3F]/50 backdrop-blur-xs overflow-y-auto"
             role="dialog"
             aria-modal="true"
             aria-labelledby="workflow-modal-title"
@@ -243,81 +251,71 @@ export default function WorkflowSplashModal() {
                 </div>
               </div>
 
-              {/* Decision Section (Exact Match with Homepage 'Main Actions' Section) */}
-              <div className="bg-white border border-gray-200 rounded-xl p-5 sm:p-6 mb-6 shadow-2xs relative">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch relative">
-                  
-                  {/* Left Pathway: Available in Public Domain (Green) */}
-                  <div className="flex flex-col justify-between items-start text-left md:pr-6">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2.5 bg-green-50 border border-green-100 rounded-full text-green-700 shrink-0">
-                          <InformationCircleIcon className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h4 className="text-base sm:text-lg font-bold text-green-700">
-                            {strings.getInformationBox.title}
-                          </h4>
-                          <span className="text-[11px] font-semibold text-green-800 bg-green-100/80 px-2 py-0.5 rounded">
-                            {strings.getInformationBox.tag}
-                          </span>
-                        </div>
+              {/* Decision Section (Elevated Dual Pathway Cards) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-6 items-stretch">
+                
+                {/* Left Pathway: Available in Public Domain (Emerald) */}
+                <div className="bg-gradient-to-b from-emerald-50/40 via-white to-white border border-emerald-200/90 hover:border-emerald-400 rounded-xl p-4 sm:p-5 flex flex-col justify-between shadow-xs hover:shadow-md transition-all">
+                  <div>
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center shrink-0 shadow-2xs">
+                        <InformationCircleIcon className="w-5 h-5" />
                       </div>
-                      <p className="text-xs text-gray-600 leading-relaxed my-3">
-                        {strings.getInformationBox.desc}
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={handleSearchClick}
-                      className="bg-[#0f6b3e] hover:bg-[#0c5933] text-white px-4 py-2 rounded-md font-medium text-xs flex items-center gap-1.5 transition-colors cursor-pointer mt-2"
-                    >
-                      <span>{strings.getInformationBox.btn}</span>
-                      <ArrowRightIcon className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  {/* Center Divider: 'or' */}
-                  <div className="hidden md:flex items-center justify-center absolute left-1/2 top-0 bottom-0 -ml-[14px]">
-                    <div className="w-px bg-gray-200 h-full"></div>
-                    <div className="absolute bg-blue-50 text-blue-600 text-[11px] font-bold w-7 h-7 rounded-full flex items-center justify-center border border-blue-100">
-                      {t.mainActions?.or || "or"}
-                    </div>
-                  </div>
-
-                  {/* Right Pathway: Not Available Online (Blue) */}
-                  <div className="flex flex-col justify-between items-start text-left md:pl-6 pt-6 md:pt-0 border-t md:border-t-0 border-gray-100">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2.5 bg-blue-50 border border-blue-100 rounded-full text-blue-700 shrink-0">
-                          <DocumentSearchIcon className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h4 className="text-base sm:text-lg font-bold text-blue-700">
-                            {strings.fileRTIBox.title}
-                          </h4>
-                          <span className="text-[11px] font-semibold text-blue-800 bg-blue-100/80 px-2 py-0.5 rounded">
-                            {strings.fileRTIBox.tag}
-                          </span>
-                        </div>
+                      <div className="flex flex-col">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-full w-fit mb-1">
+                          {strings.getInformationBox.tag}
+                        </span>
+                        <h4 className="text-sm sm:text-base font-bold text-[#0B1C3F]">
+                          {strings.getInformationBox.title}
+                        </h4>
                       </div>
-                      <p className="text-xs text-gray-600 leading-relaxed my-3">
-                        {strings.fileRTIBox.desc}
-                      </p>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={handleFileRTIClick}
-                      className="bg-[#1a4bba] hover:bg-[#153e9a] text-white px-4 py-2 rounded-md font-medium text-xs flex items-center gap-1.5 transition-colors cursor-pointer mt-2"
-                    >
-                      <span>{strings.fileRTIBox.btn}</span>
-                      <ArrowRightIcon className="w-3.5 h-3.5" />
-                    </button>
+                    <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                      {strings.getInformationBox.desc}
+                    </p>
                   </div>
 
+                  <button
+                    type="button"
+                    onClick={handleSearchClick}
+                    className="w-full bg-gradient-to-r from-[#0D8A44] to-[#0B7339] hover:from-[#0B7339] hover:to-[#095C2E] text-white px-4 py-2.5 rounded-lg font-bold text-xs flex items-center justify-center gap-2 shadow-xs hover:shadow-md transition-all cursor-pointer group"
+                  >
+                    <span>{strings.getInformationBox.btn}</span>
+                    <ArrowRightIcon className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </button>
                 </div>
+
+                {/* Right Pathway: Not Available Online (Blue) */}
+                <div className="bg-gradient-to-b from-blue-50/40 via-white to-white border border-blue-200/90 hover:border-blue-400 rounded-xl p-4 sm:p-5 flex flex-col justify-between shadow-xs hover:shadow-md transition-all">
+                  <div>
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200/80 text-blue-700 flex items-center justify-center shrink-0 shadow-2xs">
+                        <DocumentSearchIcon className="w-5 h-5" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-800 bg-blue-100/90 px-2 py-0.5 rounded-full w-fit mb-1">
+                          {strings.fileRTIBox.tag}
+                        </span>
+                        <h4 className="text-sm sm:text-base font-bold text-[#0B1C3F]">
+                          {strings.fileRTIBox.title}
+                        </h4>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                      {strings.fileRTIBox.desc}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleFileRTIClick}
+                    className="w-full bg-gradient-to-r from-[#1A4BBA] to-[#153E9A] hover:from-[#153E9A] hover:to-[#0F2F75] text-white px-4 py-2.5 rounded-lg font-bold text-xs flex items-center justify-center gap-2 shadow-xs hover:shadow-md transition-all cursor-pointer group"
+                  >
+                    <span>{strings.fileRTIBox.btn}</span>
+                    <ArrowRightIcon className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </button>
+                </div>
+
               </div>
 
               {/* Modal Footer Controls */}
