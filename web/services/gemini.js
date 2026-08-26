@@ -22,5 +22,6 @@ export async function askGemini({
         input: prompt,
     });
 
-    return interaction.output_text;
+    const response = interaction.output_text;
+    return JSON.parse(response);
 }
