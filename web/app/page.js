@@ -26,17 +26,17 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full bg-[#f8fafc]">
       {/* Hero Section (Section 0) */}
-      <section className="w-full min-h-[calc(100vh-120px)] pt-16 md:pt-24 lg:pt-28 pb-16 md:pb-20 px-4 md:px-8 text-center relative overflow-hidden flex flex-col justify-between items-center bg-gradient-to-b from-[#EDF5FD] via-[#F3F7FD] to-[#F8FAFC]">
+      <section className="w-full min-h-[calc(100vh-96px)] pt-10 sm:pt-14 md:pt-16 lg:pt-20 pb-8 sm:pb-10 md:pb-12 px-4 md:px-8 text-center relative overflow-hidden flex flex-col justify-between items-center bg-gradient-to-b from-[#EDF5FD] via-[#F3F7FD] to-[#F8FAFC]">
         {/* Background Dotted Wave Component */}
         <DottedWave />
 
         {/* Hero Main Content with Generous Vertical Whitespace */}
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full my-auto">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[56px] font-extrabold text-[#0B1C3F] tracking-tight leading-[1.18] mb-5">
-            {t.hero.headingLine1}<br />
-            {t.hero.headingLine2}
+        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full my-auto py-2 sm:py-4">
+          <h1 className="text-[23px] min-[360px]:text-[26px] sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold text-[#0B1C3F] tracking-tight leading-[1.28] sm:leading-[1.18] mb-3.5 sm:mb-5 px-1">
+            <span className="block">{t.hero.headingLine1}</span>
+            <span className="block mt-1 sm:mt-2 text-[#2563EB]">{t.hero.headingLine2}</span>
           </h1>
-          <p className="text-lg md:text-xl text-slate-600 font-medium mb-12 md:mb-14 max-w-2xl">
+          <p className="text-xs min-[360px]:text-sm sm:text-lg md:text-xl text-slate-600 font-medium mb-8 sm:mb-12 md:mb-14 max-w-2xl px-2">
             {t.hero.subtitle}
           </p>
 
@@ -47,12 +47,12 @@ export default function Home() {
                 router.push(`/submit-request?query=${encodeURIComponent(query.trim())}`);
               }
             }}
-            className="mb-6 sm:mb-10 md:mb-12" 
+            className="mb-4 sm:mb-8 md:mb-10" 
           />
         </div>
 
         {/* Stats Strip Container (Placed Inside Bottom of Hero Section) */}
-        <div className="w-full max-w-6xl mx-auto relative z-10 mt-16 sm:mt-20 md:mt-24 mb-2 sm:mb-4">
+        <div className="w-full max-w-6xl mx-auto relative z-10 mt-auto pt-6 sm:pt-10 mb-0 sm:mb-2">
           <div className="bg-white rounded-2xl shadow-xl shadow-blue-950/5 border border-gray-100/90 p-4 sm:p-6 md:p-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 sm:divide-gray-200">
               

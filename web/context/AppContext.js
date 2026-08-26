@@ -54,6 +54,32 @@ export const dictionary = {
       step3Title: "3. File RTI (if needed)",
       step3Desc: "Request information with assistant guidance."
     },
+    workflowSplash: {
+      badge: "Citizen Guide",
+      title: "How the Portal Works",
+      subtitle: "Check public records for free first. Proceed to file an official RTI only if the information is not available in the public domain.",
+      step1Title: "1. Search / Ask",
+      step1Desc: "Search open databases and public authorities.",
+      step2Title: "2. Public Records (₹0)",
+      step2Desc: "Instant access to published records at zero fees.",
+      step3Title: "3. File an RTI",
+      step3Desc: "Submit an official request under the RTI Act, 2005.",
+      getInformationBox: {
+        title: "Available in Public Domain",
+        tag: "₹0 • No RTI Application Needed",
+        desc: "Information and records already disclosed in the public domain can be accessed immediately free of cost.",
+        btn: "Search Records"
+      },
+      fileRTIBox: {
+        title: "Not Available Online",
+        tag: "Statutory 30-Day Resolution",
+        desc: "If the required records are not available publicly, submit an official RTI application under Section 6(1).",
+        btn: "File an RTI Application"
+      },
+      dontShowAgain: "Don't show this guide on startup",
+      floatingBtn: "How the Portal Works",
+      closeBtn: "Close Guide"
+    },
     mainActions: {
       or: "or",
       getInformation: {
@@ -170,6 +196,32 @@ export const dictionary = {
       step3Title: "3. RTI दर्ज करें (आवश्यकता होने पर)",
       step3Desc: "स्मार्ट सहायक के मार्गदर्शन में सीधे ऑनलाइन RTI आवेदन जमा करें।"
     },
+    workflowSplash: {
+      badge: "नागरिक मार्गदर्शिका",
+      title: "पोर्टल की कार्यप्रणाली",
+      subtitle: "पहले सार्वजनिक रिकॉर्ड में निःशुल्क खोजें। सार्वजनिक क्षेत्र में जानकारी उपलब्ध न होने पर ही औपचारिक RTI आवेदन दर्ज करें।",
+      step1Title: "1. खोजें या प्रश्न पूछें",
+      step1Desc: "सार्वजनिक डेटाबेस और लोक प्राधिकरणों में खोजें।",
+      step2Title: "2. सार्वजनिक रिकॉर्ड (₹0)",
+      step2Desc: "बिना किसी शुल्क के प्रकाशित सरकारी दस्तावेज तुरंत प्राप्त करें।",
+      step3Title: "3. RTI दर्ज करें",
+      step3Desc: "RTI अधिनियम, 2005 के तहत औपचारिक आवेदन जमा करें।",
+      getInformationBox: {
+        title: "सार्वजनिक क्षेत्र में उपलब्ध",
+        tag: "₹0 • आवेदन की आवश्यकता नहीं",
+        desc: "स्वतः प्रकटीकरण के तहत पहले से उपलब्ध रिकॉर्ड और आंकड़े बिना किसी शुल्क के तुरंत देखे और डाउनलोड किए जा सकते हैं।",
+        btn: "सूचना खोजें"
+      },
+      fileRTIBox: {
+        title: "सार्वजनिक रूप से अनुपलब्ध",
+        tag: "30-दिवसीय वैधानिक समय-सीमा",
+        desc: "यदि आवश्यक दस्तावेज सार्वजनिक रूप से उपलब्ध नहीं हैं, तो सीधे संबंधित नोडल अधिकारी को नया RTI आवेदन जमा करें।",
+        btn: "RTI आवेदन करें"
+      },
+      dontShowAgain: "शुरुआत में दोबारा न दिखाएं",
+      floatingBtn: "पोर्टल की कार्यप्रणाली",
+      closeBtn: "मार्गदर्शिका बंद करें"
+    },
     mainActions: {
       or: "अथवा",
       getInformation: {
@@ -241,7 +293,17 @@ export const dictionary = {
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
-  const { language, fontSize, setLanguage, toggleLanguage, setFontSize } = useAppStore();
+  const { 
+    language, 
+    fontSize, 
+    isWorkflowModalOpen,
+    setLanguage, 
+    toggleLanguage, 
+    setFontSize,
+    openWorkflowModal,
+    closeWorkflowModal,
+    toggleWorkflowModal
+  } = useAppStore();
 
   // Load stored preferences on mount (deferred to macrotask queue to prevent cascading renders)
   useEffect(() => {
@@ -290,6 +352,10 @@ export function AppProvider({ children }) {
         toggleLanguage,
         fontSize,
         setFontSize,
+        isWorkflowModalOpen,
+        openWorkflowModal,
+        closeWorkflowModal,
+        toggleWorkflowModal,
         t
       }}
     >

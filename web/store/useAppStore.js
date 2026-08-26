@@ -4,6 +4,11 @@ import { dictionary } from '../context/AppContext';
 export const useAppStore = create((set, get) => ({
   language: 'en',
   fontSize: 0, // -1 (small), 0 (normal), 1 (large)
+  isWorkflowModalOpen: false,
+
+  openWorkflowModal: () => set({ isWorkflowModalOpen: true }),
+  closeWorkflowModal: () => set({ isWorkflowModalOpen: false }),
+  toggleWorkflowModal: () => set((state) => ({ isWorkflowModalOpen: !state.isWorkflowModalOpen })),
   
   setLanguage: (lang) => {
     const nextLang = lang || (get().language === 'en' ? 'hi' : 'en');

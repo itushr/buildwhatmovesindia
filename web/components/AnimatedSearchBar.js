@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useSyncExternalStore } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SearchIcon, XIcon } from "./Icons";
 import { useApp } from "../context/AppContext";
-
-const emptySubscribe = () => () => {};
 
 export default function AnimatedSearchBar({
   prompts: customPrompts,
@@ -20,6 +18,11 @@ export default function AnimatedSearchBar({
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [prevPrompts, setPrevPrompts] = useState(prompts);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Sync state during render if prompts prop changes (recommended React pattern without effect)
   if (prompts !== prevPrompts) {
@@ -28,9 +31,6 @@ export default function AnimatedSearchBar({
     setDisplayText("");
     setIsDeleting(false);
   }
-
-  // Hydration-safe client mount detection without setState in effect
-  const isMounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   const timeoutRef = useRef(null);
 
