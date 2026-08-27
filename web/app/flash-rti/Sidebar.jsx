@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Sidebar() {
     return (
-        <div className="w-75 shadow-[inset_-0.1px_0_0_0_#000000] h-dvh">
+        <div className="w-75 shadow-[inset_-0.1px_0_0_0_#000000] h-dvh fixed top-0 left-0">
             <div className="shadow-[inset_0_-0.1px_0_0_#000000] h-15 flex items-center px-3 gap-1">
                 <Link href="/">
                     <span className="uppercase hover:underline cursor-pointer">RTI Online</span>

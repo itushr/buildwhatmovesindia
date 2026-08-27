@@ -2,26 +2,164 @@
 
 import { Inter, Sora } from "next/font/google";
 import Sidebar from "./Sidebar";
-import { ArrowRight, ArrowUp, CornerDownLeft, Loader } from "lucide-react";
+import { CornerDownLeft, Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
+import Table from "./Table";
 
 const sora = Sora({
   subsets: ['latin'],
   display: 'swap',
 })
 
+const data = [
+  [
+    "state",
+    "amount",
+    "date",
+    "type",
+    "authority",
+    "department",
+    "district",
+    "year",
+    "status",
+    "source",
+  ],
+  [
+    "Maharashtra",
+    1250000,
+    "2025-01-15",
+    "individual",
+    "Income Tax Department",
+    "Revenue",
+    "Mumbai",
+    2025,
+    "verified",
+    "income_tax",
+  ],
+  [
+    "Maharashtra",
+    980000,
+    "2025-02-15",
+    "corporate",
+    "Income Tax Department",
+    "Revenue",
+    "Pune",
+    2025,
+    "verified",
+    "income_tax",
+  ],
+  [
+    "Gujarat",
+    850000,
+    "2025-01-15",
+    "individual",
+    "Income Tax Department",
+    "Revenue",
+    "Ahmedabad",
+    2025,
+    "verified",
+    "income_tax",
+  ],
+  [
+    "Karnataka",
+    1420000,
+    "2025-03-15",
+    "corporate",
+    "Income Tax Department",
+    "Revenue",
+    "Bengaluru",
+    2025,
+    "verified",
+    "income_tax",
+  ],
+  [
+    "Tamil Nadu",
+    1135000,
+    "2025-03-15",
+    "individual",
+    "Income Tax Department",
+    "Revenue",
+    "Chennai",
+    2025,
+    "verified",
+    "income_tax",
+  ],
+  [
+    "Rajasthan",
+    720000,
+    "2025-04-15",
+    "corporate",
+    "Income Tax Department",
+    "Revenue",
+    "Jaipur",
+    2025,
+    "pending",
+    "income_tax",
+  ],
+  [
+    "Delhi",
+    1890000,
+    "2025-04-15",
+    "individual",
+    "Income Tax Department",
+    "Revenue",
+    "New Delhi",
+    2025,
+    "verified",
+    "income_tax",
+  ],
+  [
+    "West Bengal",
+    910000,
+    "2025-05-15",
+    "corporate",
+    "Income Tax Department",
+    "Revenue",
+    "Kolkata",
+    2025,
+    "verified",
+    "income_tax",
+  ],
+  [
+    "Uttar Pradesh",
+    1340000,
+    "2025-05-15",
+    "individual",
+    "Income Tax Department",
+    "Revenue",
+    "Lucknow",
+    2025,
+    "verified",
+    "income_tax",
+  ],
+  [
+    "Kerala",
+    680000,
+    "2025-06-15",
+    "corporate",
+    "Income Tax Department",
+    "Revenue",
+    "Kochi",
+    2025,
+    "pending",
+    "income_tax",
+  ],
+];
+
 export default function page() {
   return (
-    <div className={`w-dvw h-dvh absolute top-0 left-0 bg-slate-50 z-50 flex overflow-auto ${sora.className} text-lg`}>
+    <div className={`w-dvw h-dvh absolute top-0 left-0 bg-slate-50 z-50 overflow-auto ${sora.className} text-lg pl-75`}>
       <Sidebar />
-      <div className="flex-1">
-        <div className="shadow-[inset_0_-0.1px_0_0_#000000] h-15">
+      <div className="w-full">
+        <div className="shadow-[inset_0_-0.01px_0_0_#000000] h-15 sticky top-0 bg-slate-50/50 z-100 backdrop-blur-md">
           <Navbar />
         </div>
 
-        <div className="max-w-200 mt-50 mx-auto">
-          <div className="mb-4">
+        <div className="max-w-200 mt-40 mx-auto pb-10">
+          <div className="w-fit mx-auto bg-white px-5 py-2 rounded-full text-sm shadow-[inset_0_0_0_0.1px_#aaa]">Note: Mock APIs are limited. Try a suggested query, tweak it, or check History in the sidebar.</div>
+
+          <div className="mb-4 mt-10">
             <p className="text-sm text-gray-500 mb-2">
               Try asking
             </p>
@@ -43,7 +181,7 @@ export default function page() {
             </div>
           </div>
 
-          <div className="shadow-[inset_0_0_0_1px_#aaa] pt-5 pl-5 pb-2 pr-2 rounded-lg flex">
+          <div className="shadow-[inset_0_0_0_1px_#aaa] pt-2 pl-3 pb-2 pr-2 rounded-lg flex">
             <textarea className="resize-none flex-1 outline-none h-15" placeholder="What do you want to know?" />
             <div className="flex justify-end items-end">
               <div className="p-2 rounded-full bg-[#2D3A1F]">
@@ -52,14 +190,24 @@ export default function page() {
             </div>
           </div>
 
-          <div className="mt-10 space-y-3">
-            <Step status="working" text="Identifying concerned public authority" />
-            <Step status="default" text="Find available government data sources" />
-            <Step status="default" text="Select most relevant data source" />
-            <Step status="default" text="Retrieve necessary information the source" />
-            <Step status="default" text="Convert raw data to presentable form" />
+          <div>
+            <div className="space-x-2 text-gray-500 text-sm mt-3">
+              <span>Agents are working for you...</span>
+            </div>
+            <div className="mt-2 space-y-3">
+              <Step status="working" text="Identifying concerned public authority" />
+              <Step status="default" text="Find available government data sources" />
+              <Step status="default" text="Select most relevant data source" />
+              <Step status="default" text="Retrieve necessary information the source" />
+              <Step status="default" text="Convert raw data to presentable form" />
+            </div>
+          </div>
+
+          <div className="mt-5">
+            <Table data={data} />
           </div>
         </div>
+
 
       </div>
     </div>
