@@ -184,8 +184,10 @@ export default function FlashRTI() {
     setShowSteps(true);
     resetSteps();
 
-    const controller = new AbortController();
-    abortControllerRef.current = controller;
+    const protocol =
+      window.location.protocol === "https:" ? "wss:" : "ws:";
+
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
 
     try {
       // Step 0: Identify concerned public authority
