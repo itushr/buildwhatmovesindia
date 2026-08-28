@@ -1,3 +1,8 @@
+"use client";
+
+import FlashRTI from "./flash-rti/page";
+import { usePathname } from "next/navigation";
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "../components/Header";
@@ -15,22 +20,42 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "RTI Information Access Portal | Government of India Initiative",
-  description:
-    "Official Right to Information (RTI) Access Portal. Search public records, file RTI applications, and track requests online seamlessly under the RTI Act, 2005.",
-  keywords: [
-    "RTI",
-    "Right to Information",
-    "Government of India",
-    "RTI Portal",
-    "Public Authority",
-    "Citizen Services",
-  ],
-  authors: [{ name: "Government of India" }],
-};
+// TO DO : change to different layout for (main) & (flash)
+// export const metadata = {
+//   title: "RTI Information Access Portal | Government of India Initiative",
+//   description:
+//     "Official Right to Information (RTI) Access Portal. Search public records, file RTI applications, and track requests online seamlessly under the RTI Act, 2005.",
+//   keywords: [
+//     "RTI",
+//     "Right to Information",
+//     "Government of India",
+//     "RTI Portal",
+//     "Public Authority",
+//     "Citizen Services",
+//   ],
+//   authors: [{ name: "Government of India" }],
+// };
 
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+
+  if (pathname === "/flash-rti") {
+    return (
+      <html
+        lang="en"
+        suppressHydrationWarning
+        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      >
+        <body>
+          <AppProvider>
+            <FlashRTI />
+          </AppProvider>
+        </body>
+      </html>
+    )
+  }
+
+
   return (
     <html
       lang="en"
