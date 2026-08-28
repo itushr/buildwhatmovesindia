@@ -30,7 +30,8 @@ export async function POST(request) {
         return NextResponse.json(
             {
                 status: "error",
-                error: "Error occured while agents working"
+                error: "Error occurred while agents working",
+                historyId: error.historyId
             },
             { status: 500 }
         );
