@@ -21,6 +21,11 @@ export default function FlashRTI() {
   const [showSteps, setShowSteps] = useState(true);
   const wsRef = useRef(null);
 
+  const [histories, setHistories] = useState([]);
+  const [activeHistoryId, setActiveHistoryId] = useState(null);
+  const [originalQuery, setOriginalQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
   const [steps, setSteps] = useState([
     { text: "Identify concerned public authority", status: "default", estimated: 13 },
     { text: "Find available government data sources", status: "default", estimated: 5 },
@@ -28,6 +33,69 @@ export default function FlashRTI() {
     { text: "Retrieve necessary information the source", status: "default", estimated: 5 },
     { text: "Convert raw data to presentable form", status: "default", estimated: 60 },
   ]);
+
+  const fetchHistories = async () => {
+    try {
+      const res = await fetch("/api/history");
+      if (res.ok) {
+        const data = await res.json();
+        setHistories(data);
+      }
+    } catch (err) {
+      console.error("Error fetching history list:", err);
+    }
+  };
+
+  const handleHistoryClick = async (id) => {
+    if (wsRef.current) {
+      wsRef.current.close();
+    }
+    setLoading(false);
+    setError(null);
+    setResult(null);
+    try {
+      const res = await fetch(`/api/history?id=${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setActiveHistoryId(data.id);
+        setQuery(data.query || "");
+        setOriginalQuery(data.query || "");
+        if (data.data) {
+          setResult(data.data.result);
+          setError(data.data.error);
+          if (data.data.steps) {
+            setSteps(data.data.steps);
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error loading history details:", err);
+      setError("Failed to load details from history.");
+    }
+  };
+
+  const handleNewSessionClick = () => {
+    if (wsRef.current) {
+      wsRef.current.close();
+    }
+    setLoading(false);
+    setError(null);
+    setResult(null);
+    setQuery("");
+    setOriginalQuery("");
+    setActiveHistoryId(null);
+    setSteps([
+      { text: "Identify concerned public authority", status: "default", estimated: 13 },
+      { text: "Find available government data sources", status: "default", estimated: 5 },
+      { text: "Select most relevant data source", status: "default", estimated: 14 },
+      { text: "Retrieve necessary information the source", status: "default", estimated: 5 },
+      { text: "Convert raw data to presentable form", status: "default", estimated: 60 },
+    ]);
+  };
+
+  useEffect(() => {
+    fetchHistories();
+  }, []);
 
   useEffect(() => {
     const allStepsCompleted = steps.every(
@@ -55,9 +123,22 @@ export default function FlashRTI() {
       wsRef.current.close();
     }
 
+    // Decouple if query has modified from the loaded or completed query
+    if (activeHistoryId !== null && queryText.trim() !== originalQuery.trim()) {
+      setActiveHistoryId(null);
+      setOriginalQuery("");
+    }
+
     setLoading(true);
     setError(null);
     setResult(null);
+    setSteps([
+      { text: "Identify concerned public authority", status: "default", estimated: 13 },
+      { text: "Find available government data sources", status: "default", estimated: 5 },
+      { text: "Select most relevant data source", status: "default", estimated: 14 },
+      { text: "Retrieve necessary information the source", status: "default", estimated: 5 },
+      { text: "Convert raw data to presentable form", status: "default", estimated: 60 },
+    ]);
 
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     // Connect to port 3001
@@ -98,6 +179,11 @@ export default function FlashRTI() {
           console.log("WebSocket query execution complete:", message.result);
           setResult(message.result);
           setLoading(false);
+          if (message.historyId) {
+            setActiveHistoryId(message.historyId);
+            setOriginalQuery(queryText);
+            fetchHistories();
+          }
           // Set all remaining steps to done
           setSteps((prevSteps) =>
             prevSteps.map(s => (s.status === "working" || s.status === "default") ? { ...s, status: "done" } : s)
@@ -108,6 +194,11 @@ export default function FlashRTI() {
           console.error("WebSocket query execution error:", message.error);
           setError(message.error);
           setLoading(false);
+          if (message.historyId) {
+            setActiveHistoryId(message.historyId);
+            setOriginalQuery(queryText);
+            fetchHistories();
+          }
           // Set current working step to error
           setSteps((prevSteps) =>
             prevSteps.map(s => s.status === "working" ? { ...s, status: "error" } : s)
@@ -154,7 +245,14 @@ export default function FlashRTI() {
 
   return (
     <div className={`w-dvw h-dvh absolute top-0 left-0 bg-slate-50 z-200 overflow-auto ${sora.className} text-lg pl-75`}>
-      <Sidebar />
+      <Sidebar
+        activeHistoryId={activeHistoryId}
+        histories={histories}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onHistoryClick={handleHistoryClick}
+        onNewSessionClick={handleNewSessionClick}
+      />
       <div className="w-full">
         <div className="shadow-[inset_0_-0.01px_0_0_#000000] h-15 sticky top-0 bg-slate-50/50 z-10 backdrop-blur-md">
           <Navbar />

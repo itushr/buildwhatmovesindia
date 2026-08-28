@@ -43,7 +43,8 @@ export function startWebSocketServer() {
                         if (ws.readyState === ws.OPEN) {
                             ws.send(JSON.stringify({
                                 type: 'done',
-                                result
+                                result,
+                                historyId: result?._history_id
                             }));
                         }
                     }
@@ -53,7 +54,8 @@ export function startWebSocketServer() {
                         if (ws.readyState === ws.OPEN) {
                             ws.send(JSON.stringify({
                                 type: 'error',
-                                error: error.message || 'Error occurred while processing query'
+                                error: error.message || 'Error occurred while processing query',
+                                historyId: error.historyId
                             }));
                         }
                     } catch (e) {
