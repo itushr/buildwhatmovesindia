@@ -44,7 +44,7 @@ export default function FlashRTI() {
   const [result, setResult] = useState(null);
   const [showSteps, setShowSteps] = useState(true);
 
-  const wsRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
   const [histories, setHistories] = useState([]);
   const [activeHistoryId, setActiveHistoryId] = useState(null);
@@ -80,8 +80,8 @@ export default function FlashRTI() {
   };
 
   const handleHistoryClick = async (id) => {
-    if (wsRef.current) {
-      wsRef.current.close();
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
 
     setSidebarOpen(false);
@@ -105,6 +105,12 @@ export default function FlashRTI() {
 
           if (data.data.steps) {
             setSteps(data.data.steps);
+            const allStepsCompleted = data.data.steps.every(
+              (step) => step.status === "done" || step.status === "error"
+            );
+            if (allStepsCompleted) {
+              setShowSteps(false);
+            }
           }
         }
       }
@@ -115,8 +121,8 @@ export default function FlashRTI() {
   };
 
   const handleNewSessionClick = () => {
-    if (wsRef.current) {
-      wsRef.current.close();
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
 
     setSidebarOpen(false);
@@ -130,18 +136,10 @@ export default function FlashRTI() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchHistories();
   }, []);
 
-  useEffect(() => {
-    const allStepsCompleted = steps.every(
-      (step) => step.status === "done" || step.status === "error"
-    );
-
-    if (allStepsCompleted) {
-      setShowSteps(false);
-    }
-  }, [steps]);
 
   // Prevent body scrolling when mobile sidebar is open
   useEffect(() => {
@@ -156,20 +154,20 @@ export default function FlashRTI() {
     };
   }, [sidebarOpen]);
 
-  // Cleanup websocket
+  // Cleanup REST requests
   useEffect(() => {
     return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
     };
   }, []);
 
-  const runQuery = (queryText) => {
+  const runQuery = async (queryText) => {
     if (!queryText || !queryText.trim()) return;
 
-    if (wsRef.current) {
-      wsRef.current.close();
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
 
     if (
@@ -191,136 +189,204 @@ export default function FlashRTI() {
 
     const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
 
-    console.log(`Connecting to WebSocket at ${wsUrl}`);
+    try {
+      // Step 0: Identify concerned public authority
+      setSteps((prev) => {
+        const next = prev.map((s, idx) => (idx === 0 ? { ...s, status: "working" } : s));
+        return next;
+      });
 
-    const ws = new WebSocket(wsUrl);
-    wsRef.current = ws;
+      const res0 = await fetch("/api/run-step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ step: 0, query: queryText, context: {} }),
+        signal: controller.signal,
+      });
 
-    ws.onopen = () => {
-      console.log(
-        `WebSocket connection opened. Asking for query: "${queryText}"`
-      );
+      const data0 = await res0.json();
+      if (controller.signal.aborted) return;
 
-      ws.send(
-        JSON.stringify({
-          type: "ask",
-          query: queryText,
-        })
-      );
-    };
-
-    ws.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-
-        console.log("WebSocket message received:", message);
-
-        if (message.type === "progress") {
-          const { step, status } = message;
-
-          setSteps((prevSteps) => {
-            const nextSteps = prevSteps.map((s, idx) => {
-              if (idx === step) {
-                return { ...s, status };
-              }
-
-              return s;
-            });
-
-            if (
-              status === "done" &&
-              nextSteps[step + 1] &&
-              nextSteps[step + 1].status === "default"
-            ) {
-              nextSteps[step + 1].status = "working";
-            }
-
-            return nextSteps;
-          });
-        } else if (message.type === "done") {
-          console.log(
-            "WebSocket query execution complete:",
-            message.result
-          );
-
-          setResult(message.result);
-          setLoading(false);
-
-          if (message.historyId) {
-            setActiveHistoryId(message.historyId);
-            setOriginalQuery(queryText);
-            fetchHistories();
-          }
-
-          setSteps((prevSteps) =>
-            prevSteps.map((s) =>
-              s.status === "working" || s.status === "default"
-                ? { ...s, status: "done" }
-                : s
-            )
-          );
-
-          ws.close();
-        } else if (message.type === "error") {
-          console.error(
-            "WebSocket query execution error:",
-            message.error
-          );
-
-          setError(message.error);
-          setLoading(false);
-
-          if (message.historyId) {
-            setActiveHistoryId(message.historyId);
-            setOriginalQuery(queryText);
-            fetchHistories();
-          }
-
-          setSteps((prevSteps) =>
-            prevSteps.map((s) =>
-              s.status === "working"
-                ? { ...s, status: "error" }
-                : s
-            )
-          );
-
-          ws.close();
+      if (data0.status === "error") {
+        setSteps((prev) => {
+          const next = prev.map((s, idx) => (idx === 0 ? { ...s, status: "error" } : s));
+          return next;
+        });
+        setError(data0.error);
+        if (data0.historyId) {
+          setActiveHistoryId(data0.historyId);
+          setOriginalQuery(queryText);
+          fetchHistories();
         }
-      } catch (err) {
-        console.error(
-          "Error matching WebSocket message payload:",
-          err
-        );
+        setLoading(false);
+        return;
       }
-    };
 
-    ws.onerror = (err) => {
-      console.error("WebSocket error state:", err);
+      setSteps((prev) => {
+        const next = prev.map((s, idx) => {
+          if (idx === 0) return { ...s, status: "done" };
+          if (idx === 1) return { ...s, status: "working" };
+          return s;
+        });
+        return next;
+      });
 
-      setError(
-        "WebSocket connection failed. Please ensure the agent backend is running."
-      );
+      // Step 1: Find available government data sources
+      const res1 = await fetch("/api/run-step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ step: 1, query: queryText, context: { authorityData: data0.details } }),
+        signal: controller.signal,
+      });
 
-      setLoading(false);
+      const data1 = await res1.json();
+      if (controller.signal.aborted) return;
 
-      setSteps((prevSteps) =>
-        prevSteps.map((s) =>
-          s.status === "working"
-            ? { ...s, status: "error" }
-            : s
-        )
-      );
-    };
-
-    ws.onclose = () => {
-      console.log("WebSocket closed.");
-
-      setLoading(false);
-
-      if (wsRef.current === ws) {
-        wsRef.current = null;
+      if (data1.status === "error") {
+        setSteps((prev) => {
+          const next = prev.map((s, idx) => (idx === 1 ? { ...s, status: "error" } : s));
+          return next;
+        });
+        setError(data1.error);
+        if (data1.historyId) {
+          setActiveHistoryId(data1.historyId);
+          setOriginalQuery(queryText);
+          fetchHistories();
+        }
+        setLoading(false);
+        return;
       }
-    };
+
+      setSteps((prev) => {
+        const next = prev.map((s, idx) => {
+          if (idx === 1) return { ...s, status: "done" };
+          if (idx === 2) return { ...s, status: "working" };
+          return s;
+        });
+        return next;
+      });
+
+      // Step 2: Select most relevant data source
+      const res2 = await fetch("/api/run-step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ step: 2, query: queryText, context: { services: data1.details } }),
+        signal: controller.signal,
+      });
+
+      const data2 = await res2.json();
+      if (controller.signal.aborted) return;
+
+      if (data2.status === "error") {
+        setSteps((prev) => {
+          const next = prev.map((s, idx) => (idx === 2 ? { ...s, status: "error" } : s));
+          return next;
+        });
+        setError(data2.error);
+        if (data2.historyId) {
+          setActiveHistoryId(data2.historyId);
+          setOriginalQuery(queryText);
+          fetchHistories();
+        }
+        setLoading(false);
+        return;
+      }
+
+      setSteps((prev) => {
+        const next = prev.map((s, idx) => {
+          if (idx === 2) return { ...s, status: "done" };
+          if (idx === 3) return { ...s, status: "working" };
+          return s;
+        });
+        return next;
+      });
+
+      // Step 3: Retrieve necessary information the source
+      const res3 = await fetch("/api/run-step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ step: 3, query: queryText, context: { serviceData: data2.details } }),
+        signal: controller.signal,
+      });
+
+      const data3 = await res3.json();
+      if (controller.signal.aborted) return;
+
+      if (data3.status === "error") {
+        setSteps((prev) => {
+          const next = prev.map((s, idx) => (idx === 3 ? { ...s, status: "error" } : s));
+          return next;
+        });
+        setError(data3.error);
+        if (data3.historyId) {
+          setActiveHistoryId(data3.historyId);
+          setOriginalQuery(queryText);
+          fetchHistories();
+        }
+        setLoading(false);
+        return;
+      }
+
+      setSteps((prev) => {
+        const next = prev.map((s, idx) => {
+          if (idx === 3) return { ...s, status: "done" };
+          if (idx === 4) return { ...s, status: "working" };
+          return s;
+        });
+        return next;
+      });
+
+      // Step 4: Convert raw data to presentable form
+      const res4 = await fetch("/api/run-step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ step: 4, query: queryText, context: { data: data3.details } }),
+        signal: controller.signal,
+      });
+
+      const data4 = await res4.json();
+      if (controller.signal.aborted) return;
+
+      if (data4.status === "error") {
+        setSteps((prev) => {
+          const next = prev.map((s, idx) => (idx === 4 ? { ...s, status: "error" } : s));
+          return next;
+        });
+        setError(data4.error);
+        if (data4.historyId) {
+          setActiveHistoryId(data4.historyId);
+          setOriginalQuery(queryText);
+          fetchHistories();
+        }
+        setLoading(false);
+        return;
+      }
+
+      setSteps((prev) => {
+        return prev.map((s) => ({ ...s, status: "done" }));
+      });
+      setResult(data4.details);
+      setLoading(false);
+      setShowSteps(false);
+
+      if (data4.historyId) {
+        setActiveHistoryId(data4.historyId);
+        setOriginalQuery(queryText);
+        fetchHistories();
+      }
+
+    } catch (err) {
+      if (controller.signal.aborted) return;
+      console.error("Step execution error:", err);
+      setError("An error occurred during query execution. Please ensure the agent backend is running.");
+      setLoading(false);
+      setSteps((prev) =>
+        prev.map((s) => (s.status === "working" ? { ...s, status: "error" } : s))
+      );
+    } finally {
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null;
+      }
+    }
   };
 
   const handleSuggestionClick = (suggestion) => {
@@ -728,11 +794,15 @@ const Step = ({
   status,
   estimated = 13,
 }) => {
+  const [prevStatus, setPrevStatus] = useState(status);
+  const [prevEstimated, setPrevEstimated] = useState(estimated);
   const [time, setTime] = useState(estimated);
 
-  useEffect(() => {
+  if (status !== prevStatus || estimated !== prevEstimated) {
+    setPrevStatus(status);
+    setPrevEstimated(estimated);
     setTime(estimated);
-  }, [estimated, status]);
+  }
 
   useEffect(() => {
     if (status !== "working") return;
