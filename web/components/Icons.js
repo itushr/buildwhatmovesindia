@@ -145,33 +145,26 @@ export const MenuIcon = ({ className = "w-6 h-6", strokeWidth = 2 }) => (
 );
 
 export const AnimatedMenuIcon = ({ isOpen, className = "w-6 h-6" }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    fill="none" 
-    viewBox="0 0 24 24" 
-    strokeWidth={2} 
-    stroke="currentColor" 
-    className={className}
-  >
-    <line 
-      x1="4" y1="7" x2="20" y2="7" 
-      className={`transition-all duration-300 ease-in-out origin-center ${
-        isOpen ? "translate-y-[5px] rotate-45" : ""
-      }`} 
+  <div className={`relative w-6 h-6 flex items-center justify-center shrink-0 ${className}`}>
+    {/* Top line morphing to diagonal */}
+    <span
+      className={`absolute left-[3px] top-[5px] w-[18px] h-[2px] bg-current rounded-full transition-all duration-300 ease-in-out origin-center ${
+        isOpen ? "translate-y-[6px] rotate-45" : "translate-y-0 rotate-0"
+      }`}
     />
-    <line 
-      x1="4" y1="12" x2="20" y2="12" 
-      className={`transition-all duration-200 ease-in-out ${
-        isOpen ? "opacity-0 scale-x-0" : "opacity-100"
-      }`} 
+    {/* Middle line fading out & scaling */}
+    <span
+      className={`absolute left-[3px] top-[11px] w-[18px] h-[2px] bg-current rounded-full transition-all duration-200 ease-in-out origin-center ${
+        isOpen ? "opacity-0 scale-x-0" : "opacity-100 scale-x-100"
+      }`}
     />
-    <line 
-      x1="4" y1="17" x2="20" y2="17" 
-      className={`transition-all duration-300 ease-in-out origin-center ${
-        isOpen ? "-translate-y-[5px] -rotate-45" : ""
-      }`} 
+    {/* Bottom line morphing to diagonal */}
+    <span
+      className={`absolute left-[3px] top-[17px] w-[18px] h-[2px] bg-current rounded-full transition-all duration-300 ease-in-out origin-center ${
+        isOpen ? "-translate-y-[6px] -rotate-45" : "translate-y-0 rotate-0"
+      }`}
     />
-  </svg>
+  </div>
 );
 
 export const DownloadIcon = ({ className = "w-4 h-4", strokeWidth = 2 }) => (
@@ -179,5 +172,22 @@ export const DownloadIcon = ({ className = "w-4 h-4", strokeWidth = 2 }) => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
   </svg>
 );
+
+export const ChevronRightIcon = ({ className = "w-4 h-4", strokeWidth = 2 }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={strokeWidth} stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+  </svg>
+);
+
+export const DigiLockerIcon = ({ className = "w-4 h-4" }) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M12 2L3 6V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V6L12 2Z" fill="#1D4ED8" />
+    <path d="M7 10V8.5C7 6.57 8.57 5 10.5 5H13.5C15.43 5 17 6.57 17 8.5V10" stroke="white" strokeWidth="1.75" strokeLinecap="round" />
+    <rect x="7" y="10" width="10" height="8.5" rx="1.5" fill="white" />
+    <path d="M10 13.5L11.5 15L14.5 12" stroke="#1D4ED8" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+
 
 

@@ -10,18 +10,18 @@ import {
   ClockIcon, 
   DocumentTextIcon 
 } from '../../components/Icons';
-import { Scale, AlertCircle, CheckCircle2, FileText } from 'lucide-react';
+import { CheckCircle2, FileText, Info } from 'lucide-react';
 
 export default function FirstAppealPage() {
   const { language, t } = useApp();
   const isHindi = language === 'hi';
 
   return (
-    <div className="w-full min-h-screen py-6 sm:py-8 px-4 sm:px-6 lg:px-12 font-sans relative overflow-hidden bg-gradient-to-b from-[#EDF5FD] via-[#F3F7FD] to-[#F8FAFC]">
-      {/* Full-Page Dotted Background */}
+    <div className="w-full min-h-screen py-10 sm:py-14 px-4 sm:px-6 lg:px-12 font-sans relative overflow-hidden bg-[#FAFAFC]">
+      {/* Background Dotted Wave */}
       <DottedWave />
 
-      <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 relative z-10">
+      <div className="max-w-4xl mx-auto space-y-8 sm:space-y-10 relative z-10">
         {/* Breadcrumb Trail */}
         <div className="text-xs text-slate-500 flex items-center gap-1.5 pt-1 overflow-x-auto whitespace-nowrap">
           <Link href="/" className="hover:text-[#2563EB] transition-colors shrink-0">
@@ -29,36 +29,71 @@ export default function FirstAppealPage() {
           </Link>
           <span className="text-slate-300 shrink-0">&gt;</span>
           <span className="font-semibold text-slate-800 shrink-0">
-            {isHindi ? 'प्रथम अपील (Section 19)' : 'First Appeal'}
+            {isHindi ? 'प्रथम अपील (धारा 19)' : 'Statutory First Appeal (Section 19)'}
           </span>
         </div>
 
-        {/* Header Hero Area */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto pt-6 pb-2">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 border border-blue-200/90 text-[#1a4bba] text-xs font-bold uppercase tracking-wider mb-4 shadow-2xs">
-            <Scale className="w-3.5 h-3.5 text-[#2563EB]" />
-            <span>{isHindi ? 'प्रथम अपीलीय प्राधिकारी • RTI Act Section 19' : 'First Appellate Authority • Section 19'}</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0B1C3F] tracking-tight mb-4">
-            {isHindi ? 'प्रथम अपील दर्ज करें (First Appeal)' : 'File a Statutory First Appeal'}
+        {/* Header Hero Area with Generous Whitespace */}
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto py-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B1C3F] tracking-tight mb-5 leading-tight">
+            {isHindi ? 'प्रथम अपील आवेदन (धारा 19)' : 'Statutory First Appeal Application'}
           </h1>
           
-          <p className="text-sm sm:text-base text-slate-600 font-medium max-w-xl mx-auto mb-8 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 font-medium max-w-2xl mx-auto mb-8 leading-relaxed">
             {isHindi
-              ? 'RTI अधिनियम, 2005 की धारा 19(1) के तहत यदि 30 दिनों में सूचना न मिले या असंतोषजनक उत्तर मिले, तो प्रथम अपीलीय प्राधिकारी (FAA) के समक्ष निःशुल्क अपील करें।'
-              : 'Under Section 19(1) of the RTI Act, 2005, file an appeal before the First Appellate Authority if no response is received in 30 days or if the reply is incomplete.'}
+              ? 'RTI अधिनियम, 2005 की धारा 19(1) के अंतर्गत यदि 30 दिवसों में सूचना अप्राप्त हो अथवा प्राप्त उत्तर असंतोषजनक हो, तो प्रथम अपीलीय प्राधिकारी (FAA) के समक्ष निःशुल्क अपील प्रस्तुत करें।'
+              : 'Submit a statutory first appeal before the First Appellate Authority (FAA) if information is withheld, delayed beyond 30 days, or incomplete under Section 19(1) of the RTI Act, 2005.'}
           </p>
 
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/submit-request"
-              className="bg-[#2563EB] hover:bg-[#1d4ed8] text-white text-xs font-bold px-6 py-2.5 rounded-lg shadow-xs transition-all flex items-center gap-2"
+              className="bg-[#2563EB] hover:bg-[#1d4ed8] text-white text-xs sm:text-sm font-semibold px-6 py-3 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
             >
-              <span>{isHindi ? 'ऑनलाइन अपील प्रक्रिया शुरू करें' : 'Initiate Appeal Online'}</span>
-              <ArrowRightIcon className="w-4 h-4" />
+              <span>{isHindi ? 'ऑनलाइन अपील प्रक्रिया प्रारंभ करें' : 'Initiate Statutory Appeal'}</span>
+              <ArrowRightIcon className="w-4 h-4 text-white" />
             </Link>
+          </div>
+        </div>
+
+        {/* Minimal, Subtle Information Container */}
+        <div className="bg-white border border-slate-200/70 rounded-2xl p-6 sm:p-9 shadow-xs space-y-6 max-w-3xl mx-auto">
+          <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
+            <h2 className="text-base sm:text-lg font-extrabold text-[#0B1C3F] flex items-center gap-2">
+              <Info className="w-4 h-4 text-[#2563EB]" />
+              <span>{isHindi ? 'प्रथम अपील संबंधी मुख्य प्रावधान (धारा 19)' : 'Key Provisions for Filing First Appeal (Section 19)'}</span>
+            </h2>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">RTI ACT, 2005</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs text-slate-700">
+            <div className="space-y-1.5 p-4 rounded-xl bg-slate-50/80 border border-slate-100">
+              <span className="font-extrabold text-[#0B1C3F] block">1. Time Limit for Filing</span>
+              <p className="text-slate-500 leading-relaxed text-[11px]">
+                Must be filed within 30 days from the expiry of the prescribed response period or receipt of decision from CPIO.
+              </p>
+            </div>
+
+            <div className="space-y-1.5 p-4 rounded-xl bg-slate-50/80 border border-slate-100">
+              <span className="font-extrabold text-[#0B1C3F] block">2. Appeal Fee Exemption</span>
+              <p className="text-slate-500 leading-relaxed text-[11px]">
+                No statutory application fee is required for filing First Appeals under Central RTI Rules.
+              </p>
+            </div>
+
+            <div className="space-y-1.5 p-4 rounded-xl bg-slate-50/80 border border-slate-100">
+              <span className="font-extrabold text-[#0B1C3F] block">3. Statutory Disposal Period</span>
+              <p className="text-slate-500 leading-relaxed text-[11px]">
+                The First Appellate Authority (FAA) shall dispose of the appeal within 30 days (extendable to 45 days for recorded reasons).
+              </p>
+            </div>
+
+            <div className="space-y-1.5 p-4 rounded-xl bg-slate-50/80 border border-slate-100">
+              <span className="font-extrabold text-[#0B1C3F] block">4. Order & Remedy</span>
+              <p className="text-slate-500 leading-relaxed text-[11px]">
+                Decisions issued by FAA are binding on CPIO. Further Second Appeal lies before Central Information Commission (CIC).
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -68,6 +68,8 @@ export default function WorkflowSplashModal() {
       const searchInput = document.querySelector('input[aria-label="Search public information or file an RTI"]');
       if (searchInput) {
         searchInput.focus();
+      } else {
+        router.push('/get-information');
       }
     }
   };

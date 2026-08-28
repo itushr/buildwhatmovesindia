@@ -62,7 +62,7 @@ def generate_rti_receipt_pdf(data: dict) -> bytes:
     public_authority = data.get('publicAuthority', 'Ministry of Personnel, Public Grievances & Pensions / Department of Personnel & Training')
     subject = data.get('subject', 'Road repair budget in Ward 12')
     query_text = data.get('queryText', 'Requesting the detailed budget allocation, expenditure, and vendor details for road repair work in Ward 12 for the financial year 2025-26.')
-    amount = data.get('amount', '₹10.00')
+    amount = data.get('amount', '₹10.00').replace('₹', 'Rs. ')
     payment_mode = data.get('paymentMode', 'Online Payment (UPI)')
 
     # Truncate query text slightly if extremely long to guarantee 1-page fit
@@ -194,8 +194,8 @@ def generate_rti_receipt_pdf(data: dict) -> bytes:
 
     # 6. WHAT HAPPENS NEXT? HORIZONTAL CARD
     step1_p = Paragraph("<font color='#0D8A44'><b>✓ Request Submitted</b></font><br/><font size=7 color='#64748B'>Your application has been successfully submitted.<br/>" + date_str + "</font>", style_normal)
-    step2_p = Paragraph("<font color='#2563EB'><b>📄 Request Under Process</b></font><br/><font size=7 color='#64748B'>The PIO officer will review your request.<br/>Within 30 days</font>", style_normal)
-    step3_p = Paragraph("<font color='#2563EB'><b>✉ You Will Receive a Response</b></font><br/><font size=7 color='#64748B'>The response will be sent to your email.<br/>On or before " + target_date_str + "</font>", style_normal)
+    step2_p = Paragraph("<font color='#2563EB'><b>• Request Under Process</b></font><br/><font size=7 color='#64748B'>The PIO officer will review your request.<br/>Within 30 days</font>", style_normal)
+    step3_p = Paragraph("<font color='#2563EB'><b>• Response Notification</b></font><br/><font size=7 color='#64748B'>The response will be sent to your email.<br/>On or before " + target_date_str + "</font>", style_normal)
 
     next_card_data = [
         [Paragraph("What Happens Next?", style_section_title), "", ""],
