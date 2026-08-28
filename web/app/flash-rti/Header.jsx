@@ -6,9 +6,9 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDownIcon, LogoIndia, UserIcon, GlobeIcon, AnimatedMenuIcon, ChevronRightIcon } from './Icons';
-import { useApp } from '../context/AppContext';
-import { useAppStore } from '../store/useAppStore';
+import { ChevronDownIcon, LogoIndia, UserIcon, GlobeIcon, AnimatedMenuIcon, ChevronRightIcon } from '@/components/Icons';
+import { useApp } from '@/context/AppContext';
+import { useAppStore } from '@/store/useAppStore';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -28,7 +28,7 @@ export default function Header() {
 
   const navItems = [
     { key: 'home', label: t.header.nav.home, href: '/' },
-    { key: 'flashRTI', label:'Flash RTI', href: '/flash-rti' },
+    { key: 'flashRTI', label: 'Flash RTI', href: '/flash-rti' },
     { key: 'fileRTI', label: t.header.nav.fileRTI, href: '/submit-request' },
     { key: 'guide', label: t.header.nav.guide, href: '/guide' },
     { key: 'faqs', label: t.header.nav.faqs, href: '/faqs' },
@@ -39,7 +39,7 @@ export default function Header() {
     <header className="w-full bg-white border-b border-gray-200/80 sticky top-0 z-50 shadow-2xs">
       {/* Top Government Strip */}
       <div className="bg-[#06152B] w-full">
-        <div className="max-w-[1536px] mx-auto text-white text-[11px] sm:text-xs py-1.5 px-3 sm:px-6 md:px-12 flex justify-between items-center">
+        <div className="text-white text-[11px] sm:text-xs py-1.5 px-5 flex justify-between items-center">
           {/* Left Side: Flag & Government text */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <LogoIndia className="w-4 h-3 sm:w-5 sm:h-3.5 rounded-[1px] shrink-0" />
@@ -93,7 +93,7 @@ export default function Header() {
       </div>
 
       {/* Main Header Bar - Content Shifted Slightly Downward */}
-      <div className="px-3 sm:px-6 md:px-12 max-w-[1536px] mx-auto flex items-stretch justify-between gap-2 sm:gap-6 min-h-[58px] sm:min-h-[72px] relative">
+      <div className="px-5 flex items-stretch justify-between gap-2 sm:gap-6 min-h-[58px] sm:min-h-[72px] relative">
         {/* Logo and Title - Vertically Centered */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3.5 group shrink min-w-0 py-2.5 sm:py-3.5">
           <Image 

@@ -160,7 +160,7 @@ export default function Home() {
                 {/* Bottom CTA & Footnote (No top border) */}
                 <div className="relative z-10 mt-6 flex items-center justify-between gap-4">
                   <Link
-                    href="/get-information"
+                    href="/flash-rti"
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm text-[#2563EB] bg-white hover:bg-blue-50 shadow-md shadow-blue-950/20 hover:shadow-lg transition-all duration-200 cursor-pointer group/btn whitespace-nowrap"
                   >
                     <span>{t.mainActions.getInformation.btn}</span>

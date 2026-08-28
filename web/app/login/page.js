@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import DottedWave from '../../components/DottedWave';
 import { useApp } from '../../context/AppContext';
 import { useAppStore } from '../../store/useAppStore';
-import { 
+import {
   Eye,
   EyeOff,
   AlertCircle,
@@ -21,11 +21,11 @@ function LoginFormContent() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTarget = searchParams.get('redirect') || '/submit-request';
+  const redirectTarget = searchParams.get('redirect') || '/';
   const { loginUser } = useAppStore();
 
   // Form states - pre-filled by default for instant login
-  const [email, setEmail] = useState('citizen.rti@gov.in');
+  const [email, setEmail] = useState('testuser@gmail.com');
   const [password, setPassword] = useState('RtiPortal@2026');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -58,8 +58,8 @@ function LoginFormContent() {
 
     // Login successful
     const userObj = {
-      username: email.trim().split('@')[0] || 'citizen.rti',
-      name: email.trim() === 'citizen.rti@gov.in' ? 'Shivam Kumar' : email.trim().split('@')[0],
+      username: email.trim().split('@')[0] || 'testuser@gmail.com',
+      name: email.trim() === 'testuser@gmail.com' ? 'testuser@gamil.com' : email.trim().split('@')[0],
       email: email.trim()
     };
     loginUser(userObj);
@@ -67,9 +67,7 @@ function LoginFormContent() {
     setIsLoggedIn(true);
 
     // Auto redirect after short delay
-    setTimeout(() => {
-      router.push(redirectTarget);
-    }, 1200);
+    router.push(redirectTarget);
   };
 
   return (
@@ -227,7 +225,7 @@ export default function LoginPage() {
 
       <div className="max-w-4xl mx-auto space-y-8 sm:space-y-10 relative z-10">
         {/* Breadcrumb Trail */}
-        <div className="text-xs text-slate-500 flex items-center gap-1.5 pt-0.5 overflow-x-auto whitespace-nowrap">
+        {/* <div className="text-xs text-slate-500 flex items-center gap-1.5 pt-0.5 overflow-x-auto whitespace-nowrap">
           <Link href="/" className="hover:text-[#2563EB] transition-colors shrink-0">
             {loginT.breadcrumbHome || (isHindi ? 'मुख्य पृष्ठ' : 'Home')}
           </Link>
@@ -235,10 +233,10 @@ export default function LoginPage() {
           <span className="font-semibold text-slate-800 shrink-0">
             {loginT.breadcrumbLogin || (isHindi ? 'नागरिक लॉगिन' : 'Citizen Authentication')}
           </span>
-        </div>
+        </div> */}
 
         {/* Header Hero Area with Generous Whitespace - Aligned across all portal pages */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto py-2">
+        {/* <div className="flex flex-col items-center text-center max-w-3xl mx-auto py-2">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B1C3F] tracking-tight mb-4 leading-tight">
             {isHindi ? 'नागरिक पोर्टल प्रवेश' : 'Citizen Portal Authentication'}
           </h1>
@@ -247,10 +245,10 @@ export default function LoginPage() {
               ? 'RTI आवेदन दर्ज करने, स्थिति देखने अथवा वैधानिक अनुरोधों के प्रबंधन हेतु पंजीकृत नागरिक क्रेडेंशियल से लॉगिन करें।'
               : 'Sign in to file statutory RTI applications, monitor application progress, and manage your official requests.'}
           </p>
-        </div>
+        </div> */}
 
         {/* Main Citizen Login Card Container wrapped in Suspense */}
-        <div className="max-w-md mx-auto pb-12 pt-1">
+        <div className="max-w-md mx-auto pb-12 pt-1 mt-10">
           <Suspense fallback={
             <div className="bg-white border border-slate-200/70 rounded-2xl p-6 sm:p-9 shadow-xs text-center text-xs text-slate-500">
               Loading form...

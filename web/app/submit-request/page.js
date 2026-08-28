@@ -389,11 +389,11 @@ export default function SubmitRequestPage() {
   // DigiLocker Auto-fill simulator
   const handleDigilockerAutofill = () => {
     setIsDigilockerUsed(true);
-    setValue('applicantName', 'Shivam Kumar', { shouldValidate: true });
+    setValue('applicantName', 'Test User', { shouldValidate: true });
     setValue('gender', 'male', { shouldValidate: true });
     // Keep user's login email intact; only set fallback email if field is completely blank
     if (!getValues('email') && !user?.email) {
-      setValue('email', 'shivam.kumar@email.com', { shouldValidate: true });
+      setValue('email', 'testuser@email.com', { shouldValidate: true });
     }
     setValue('mobile', '9876543210', { shouldValidate: true });
     setValue('address', '123, Green Park, New Delhi - 110016', { shouldValidate: true });

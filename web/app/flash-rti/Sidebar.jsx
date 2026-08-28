@@ -15,14 +15,7 @@ export default function Sidebar({
     );
 
     return (
-        <div className="w-80 shadow-[inset_-0.1px_0_0_0_#000000] h-dvh fixed top-0 left-0 bg-slate-50 z-30">
-            <div className="shadow-[inset_0_-0.1px_0_0_#000000] h-15 flex items-center px-3 gap-1">
-                <Link href="/">
-                    <span className="uppercase hover:underline cursor-pointer">RTI Online</span>
-                </Link>
-                <ChevronRight />
-                <span>flashRTI</span>
-            </div>
+        <div className="w-80 pt-18 md:pt-2 md:shadow-[inset_-0.1px_0_0_0_#000000] h-full z-30">
             <div className="p-3">
                 <div>
                     <p className="text-gray-500 text-sm font-semibold">Account</p>
