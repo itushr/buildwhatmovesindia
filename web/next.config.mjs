@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  serverExternalPackages: ['ws', 'bufferutil', 'utf-8-validate'],
 };
 
 export default nextConfig;
