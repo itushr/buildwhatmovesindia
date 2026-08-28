@@ -189,7 +189,7 @@ export default function FlashRTI() {
     const protocol =
       window.location.protocol === "https:" ? "wss:" : "ws:";
 
-    const wsUrl = `${protocol}//${window.location.hostname}:3001`;
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
 
     console.log(`Connecting to WebSocket at ${wsUrl}`);
 
