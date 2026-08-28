@@ -33,7 +33,7 @@ def create_receipt_pdf(payload: ReceiptRequestPayload):
             content=pdf_bytes,
             media_type="application/pdf",
             headers={
-                "Content-Disposition": f"inline; filename={filename}"
+                "Content-Disposition": f'attachment; filename="{filename}"'
             }
         )
     except Exception as e:

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import DottedWave from '../../components/DottedWave';
 import { useApp } from '../../context/AppContext';
-import { BookOpen, ArrowRightIcon } from 'lucide-react';
+import { ArrowRightIcon } from 'lucide-react';
 
 export default function UserManualPage() {
   const { language, t } = useApp();
@@ -28,12 +28,6 @@ export default function UserManualPage() {
 
         {/* Header Hero Area */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto pt-6 pb-2">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 border border-blue-200/90 text-[#1a4bba] text-xs font-bold uppercase tracking-wider mb-4 shadow-2xs">
-            <BookOpen className="w-3.5 h-3.5 text-[#2563EB]" />
-            <span>{isHindi ? 'पोर्टल नियमावली' : 'Portal User Manual'}</span>
-          </div>
-
           <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0B1C3F] tracking-tight mb-4">
             {isHindi ? 'नागरिक एवं अधिकारी उपयोगकर्ता नियमावली' : 'Citizen & Officer User Manual'}
           </h1>
@@ -46,7 +40,7 @@ export default function UserManualPage() {
 
           <Link
             href="/guide"
-            className="bg-[#0B1C3F] hover:bg-[#152e60] text-white text-xs font-bold px-6 py-2.5 rounded-lg shadow-xs transition-all flex items-center gap-2"
+            className="bg-[#2563EB] hover:bg-[#1d4ed8] text-white text-xs sm:text-sm font-semibold px-6 py-3 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
           >
             <span>{isHindi ? 'RTI मार्गदर्शिका देखें' : 'View RTI Guide'}</span>
             <ArrowRightIcon className="w-4 h-4" />

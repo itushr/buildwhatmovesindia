@@ -4,11 +4,44 @@ import { dictionary } from '../context/AppContext';
 export const useAppStore = create((set, get) => ({
   language: 'en',
   fontSize: 0, // -1 (small), 0 (normal), 1 (large)
+  user: null,
   isWorkflowModalOpen: false,
 
   openWorkflowModal: () => set({ isWorkflowModalOpen: true }),
   closeWorkflowModal: () => set({ isWorkflowModalOpen: false }),
   toggleWorkflowModal: () => set((state) => ({ isWorkflowModalOpen: !state.isWorkflowModalOpen })),
+
+  setUser: (user) => set({ user }),
+
+  loginUser: (userData) => {
+    const userObj = typeof userData === 'string' ? { username: userData, name: userData } : userData;
+    set({ user: userObj });
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('rti_portal_user', JSON.stringify(userObj));
+      } catch (e) {}
+    }
+  },
+
+  logoutUser: () => {
+    set({ user: null });
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('rti_portal_user');
+      } catch (e) {}
+    }
+  },
+
+  initUser: () => {
+    if (typeof window !== 'undefined' && !get().user) {
+      try {
+        const savedUser = localStorage.getItem('rti_portal_user');
+        if (savedUser) {
+          set({ user: JSON.parse(savedUser) });
+        }
+      } catch (e) {}
+    }
+  },
   
   setLanguage: (lang) => {
     const nextLang = lang || (get().language === 'en' ? 'hi' : 'en');

@@ -373,55 +373,49 @@ export default function FAQsPage() {
   }, [selectedCategory, searchQuery]);
 
   return (
-    <div className="w-full min-h-screen py-6 sm:py-8 px-4 sm:px-6 lg:px-12 font-sans relative overflow-hidden bg-gradient-to-b from-[#EDF5FD] via-[#F3F7FD] to-[#F8FAFC]">
-      {/* Full-Page Dotted Background */}
+    <div className="w-full min-h-screen py-10 sm:py-14 px-4 sm:px-6 lg:px-12 font-sans relative overflow-hidden bg-[#FAFAFC]">
+      {/* Background Texture */}
       <DottedWave />
 
-      <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 relative z-10">
+      <div className="max-w-4xl mx-auto space-y-8 sm:space-y-10 relative z-10">
         {/* Breadcrumb Trail */}
-        <div className="text-xs text-slate-500 flex items-center gap-1.5 pt-1 overflow-x-auto whitespace-nowrap">
+        <div className="text-xs text-slate-500 flex items-center gap-1.5 pt-0.5 overflow-x-auto whitespace-nowrap">
           <Link href="/" className="hover:text-[#2563EB] transition-colors shrink-0">
             {t?.submitRequest?.breadcrumbHome || 'Home'}
           </Link>
           <span className="text-slate-300 shrink-0">&gt;</span>
           <span className="font-semibold text-slate-800 shrink-0">
-            {isHindi ? 'अक्सर पूछे जाने वाले प्रश्न (26 FAQs)' : 'Official FAQs (26 FAQs)'}
+            {isHindi ? 'सामान्यतः पूछे जाने वाले प्रश्न' : 'Frequently Asked Questions'}
           </span>
         </div>
 
-        {/* Header Hero Area */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto pt-2 pb-2">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200/90 text-[#1a4bba] text-xs font-bold uppercase tracking-wider mb-4 shadow-2xs">
-            <HelpCircle className="w-3.5 h-3.5 text-[#2563EB]" />
-            <span>{isHindi ? 'केंद्रीय RTI ज्ञानकोष - 26 आधिकारिक प्रश्नोत्तर' : 'Central RTI Knowledge Base - 26 Official FAQs'}</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0B1C3F] tracking-tight mb-4">
-            {isHindi ? 'अक्सर पूछे जाने वाले प्रश्न' : 'Frequently Asked Questions'}
+        {/* Header Hero Area with Generous Whitespace */}
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto py-2">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B1C3F] tracking-tight mb-4 leading-tight">
+            {isHindi ? 'सामान्यतः पूछे जाने वाले प्रश्न' : 'Frequently Asked Questions'}
           </h1>
           
-          <p className="text-sm sm:text-base md:text-lg text-slate-600 font-medium max-w-2xl mx-auto mb-7 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 font-medium max-w-2xl mx-auto mb-8 leading-relaxed">
             {isHindi
-              ? 'RTI आवेदन प्रक्रिया, भुगतान, पंजीकरण संख्या, स्थिति ट्रैकिंग, प्रथम अपील एवं तकनीकी सहायता से संबंधित सभी 26 आधिकारिक प्रश्नोत्तर।'
-              : 'Complete repository of 26 official FAQs covering RTI drafting, statutory fee payment, payment reconciliation, tracking, and first appeals.'}
+              ? 'RTI आवेदन दाखिल करने, वैधानिक ₹10 शुल्क भुगतान, BPL छूट, 30-दिवसीय समय-सीमा एवं प्रथम अपील से संबंधित आधिकारिक नियम व प्रक्रियाएं।'
+              : 'Official answers regarding statutory application filing, ₹10 fee payments, BPL exemptions under Section 7(5), status tracking, and First Appeal procedures under the RTI Act, 2005.'}
           </p>
 
           {/* Search Box */}
-          <div className="w-full max-w-2xl mx-auto relative shadow-md rounded-xl bg-white border border-gray-200/90 focus-within:ring-2 focus-within:ring-[#2563EB]/30 focus-within:border-[#2563EB] transition-all">
-            <div className="flex items-center px-4 py-3 sm:py-3.5">
-              <SearchIcon className="w-5 h-5 text-slate-400 shrink-0 mr-3" />
+          <div className="w-full max-w-xl mx-auto relative shadow-2xs rounded-xl bg-white border border-slate-300 focus-within:ring-2 focus-within:ring-[#2563EB]/15 focus-within:border-[#2563EB] transition-all">
+            <div className="flex items-center px-3.5 py-2.5 sm:py-3">
+              <SearchIcon className="w-4 h-4 text-slate-400 shrink-0 mr-2.5" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={isHindi ? 'प्रश्न या विषय खोजें (उदा. 3000 वर्ण, UPI शुल्क, प्रथम अपील, OTP, Reconciliation)...' : 'Search 26 FAQs by topic (e.g. 3000 characters, UPI, payment reconciliation, first appeal, OTP)...'}
-                className="w-full text-sm sm:text-base text-gray-800 placeholder-slate-400 bg-transparent outline-none font-medium"
+                placeholder={isHindi ? 'विषय या कीवर्ड खोजें (उदा. शुल्क, अपील, रसीद)...' : 'Search questions (e.g. fees, appeal, receipt, 3000 chars)...'}
+                className="w-full text-xs sm:text-sm text-gray-800 placeholder-slate-400 bg-transparent outline-none font-medium"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="text-xs text-slate-400 hover:text-slate-600 font-bold px-2 py-1 cursor-pointer"
+                  className="text-xs text-slate-400 hover:text-slate-600 font-bold px-1.5 py-0.5 cursor-pointer"
                   title="Clear search"
                 >
                   ✕
@@ -431,7 +425,7 @@ export default function FAQsPage() {
           </div>
         </div>
 
-        {/* Filter Pills */}
+        {/* Filter Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
           {FAQ_CATEGORIES.map((cat) => {
             const Icon = cat.icon;
@@ -441,15 +435,15 @@ export default function FAQsPage() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer select-none ${
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer select-none ${
                   isSelected
                     ? 'bg-[#0B1C3F] text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-slate-500'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-slate-500'}`} />
                 <span>{isHindi ? cat.labelHi : cat.labelEn}</span>
-                <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold ${
+                <span className={`text-[11px] px-1.5 py-0.2 rounded font-bold ${
                   isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
                 }`}>
                   {count}
@@ -460,10 +454,10 @@ export default function FAQsPage() {
         </div>
 
         {/* Results summary bar */}
-        <div className="flex items-center justify-between text-xs text-slate-500 font-medium px-1">
+        <div className="flex items-center justify-between text-xs text-slate-500 font-medium px-0.5">
           <span>
             {isHindi 
-              ? `${filteredFaqs.length} प्रश्न उपलब्ध` 
+              ? `${filteredFaqs.length} प्रश्न प्रदर्शित` 
               : `Showing ${filteredFaqs.length} of ${FAQ_DATA.length} FAQs`}
             {searchQuery && ` for "${searchQuery}"`}
           </span>
@@ -478,16 +472,16 @@ export default function FAQsPage() {
         </div>
 
         {/* FAQ Accordion List */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5">
           {filteredFaqs.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-xl p-8 text-center">
-              <InformationCircleIcon className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-              <p className="text-sm text-slate-600 font-semibold">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 text-center">
+              <InformationCircleIcon className="w-7 h-7 text-slate-400 mx-auto mb-2" />
+              <p className="text-xs sm:text-sm text-slate-600 font-semibold">
                 {isHindi ? 'कोई प्रश्न नहीं मिला।' : 'No FAQs found matching your query.'}
               </p>
               <button
                 onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
-                className="mt-3 text-xs text-[#2563EB] hover:underline font-bold"
+                className="mt-2.5 text-xs text-[#2563EB] hover:underline font-bold"
               >
                 {isHindi ? 'सभी प्रश्न रीसेट करें' : 'Reset search and filters'}
               </button>
@@ -499,24 +493,24 @@ export default function FAQsPage() {
                 <div
                   key={faq.id}
                   className={`bg-white border rounded-xl transition-all duration-200 overflow-hidden ${
-                    isOpen ? 'border-[#2563EB]/40 shadow-xs ring-1 ring-[#2563EB]/20' : 'border-slate-200/90 hover:border-slate-300 hover:shadow-2xs'
+                    isOpen ? 'border-[#2563EB]/50 shadow-xs' : 'border-slate-200/90 hover:border-slate-300'
                   }`}
                 >
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpen ? null : faq.id)}
-                    className="w-full text-left px-5 sm:px-6 py-4 flex items-start justify-between gap-4 cursor-pointer select-none"
+                    className="w-full text-left px-4 sm:px-5 py-3.5 flex items-start justify-between gap-3 cursor-pointer select-none"
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 text-[#1a4bba] text-xs font-bold mt-0.5 border border-blue-100">
+                    <div className="flex items-start gap-2.5">
+                      <span className="shrink-0 flex items-center justify-center w-5 h-5 rounded-md bg-blue-50 text-[#1a4bba] text-[11px] font-bold mt-0.5 border border-blue-100">
                         {faq.id}
                       </span>
-                      <span className="text-sm sm:text-base font-bold text-[#0B1C3F] leading-snug">
+                      <span className="text-xs sm:text-sm md:text-[15px] font-bold text-[#0B1C3F] leading-snug">
                         {isHindi ? faq.questionHi : faq.questionEn}
                       </span>
                     </div>
                     <ChevronDownIcon
-                      className={`w-4 h-4 text-slate-400 shrink-0 mt-1 transition-transform duration-200 ${
+                      className={`w-4 h-4 text-slate-400 shrink-0 mt-0.5 transition-transform duration-200 ${
                         isOpen ? 'rotate-180 text-[#2563EB]' : ''
                       }`}
                     />
@@ -528,22 +522,22 @@ export default function FAQsPage() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
                         className="overflow-hidden"
                       >
-                        <div className="px-5 sm:px-6 pb-5 pt-3 text-xs sm:text-sm text-slate-700 font-normal leading-relaxed border-t border-slate-100 bg-slate-50/40">
-                          <div className="whitespace-pre-line text-slate-700 font-normal leading-relaxed space-y-2">
+                        <div className="px-4 sm:px-5 pb-4 pt-2.5 text-xs sm:text-sm text-slate-700 font-normal leading-relaxed border-t border-slate-100 bg-slate-50/40">
+                          <div className="whitespace-pre-line text-slate-700 font-normal leading-relaxed space-y-1.5">
                             {isHindi ? faq.answerHi : faq.answerEn}
                           </div>
 
                           {faq.relatedLink && (
-                            <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center justify-start">
+                            <div className="mt-3.5 pt-2.5 border-t border-slate-200/60 flex items-center justify-start">
                               <Link
                                 href={faq.relatedLink.href}
                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#0B1C3F] text-white text-xs font-semibold hover:bg-[#152e60] transition-colors shadow-2xs"
                               >
                                 <span>{isHindi ? faq.relatedLink.labelHi : faq.relatedLink.labelEn}</span>
-                                <ArrowRightIcon className="w-3.5 h-3.5" />
+                                <ArrowRightIcon className="w-3 h-3" />
                               </Link>
                             </div>
                           )}
@@ -557,29 +551,29 @@ export default function FAQsPage() {
           )}
         </div>
 
-        {/* Support Help Desk Card */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] shrink-0">
-              <PhoneCall className="w-6 h-6" />
+        {/* Support Help Desk Banner */}
+        <div className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3 text-center sm:text-left">
+            <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] shrink-0">
+              <PhoneCall className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-[#0B1C3F]">
-                {isHindi ? 'क्या आपका कोई अन्य प्रश्न है?' : 'Still need assistance?'}
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-500 font-normal">
+              <h2 className="text-sm sm:text-base font-bold text-[#0B1C3F]">
+                {isHindi ? 'क्या आपका कोई अन्य प्रश्न है?' : 'Still have questions?'}
+              </h2>
+              <p className="text-xs text-slate-500 font-normal">
                 {isHindi 
-                  ? 'नागरिक सहायता डेस्क: टोल-फ्री 1800-11-4000 • ईमेल: helprtionline-dopt@nic.in (सोम-शनि 9:30 AM - 5:30 PM)' 
-                  : 'Citizen Helpline: Toll-Free 1800-11-4000 • Email: helprtionline-dopt@nic.in (Mon-Sat 9:30 AM - 5:30 PM)'}
+                  ? 'नागरिक हेल्पलाइन: 1800-11-4000 • ईमेल: helprtionline-dopt@nic.in' 
+                  : 'Citizen Helpline: Toll-Free 1800-11-4000 • Email: helprtionline-dopt@nic.in'}
               </p>
             </div>
           </div>
 
           <Link
             href="/contact"
-            className="shrink-0 bg-[#0B1C3F] hover:bg-[#152e60] text-white text-xs font-semibold px-5 py-2.5 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
+            className="shrink-0 bg-[#0B1C3F] hover:bg-[#152e60] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
           >
-            <span>{isHindi ? 'संपर्क करें' : 'Contact Support Desk'}</span>
+            <span>{isHindi ? 'संपर्क करें' : 'Contact Support'}</span>
             <ArrowRightIcon className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -587,3 +581,4 @@ export default function FAQsPage() {
     </div>
   );
 }
+

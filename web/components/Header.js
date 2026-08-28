@@ -6,13 +6,15 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDownIcon, LogoIndia, UserIcon, GlobeIcon, AnimatedMenuIcon } from './Icons';
+import { ChevronDownIcon, LogoIndia, UserIcon, GlobeIcon, AnimatedMenuIcon, ChevronRightIcon } from './Icons';
 import { useApp } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredNav, setHoveredNav] = useState(null);
-  const { language, setLanguage, fontSize, setFontSize, openWorkflowModal, t } = useApp();
+  const { language, setLanguage, fontSize, setFontSize, t } = useApp();
+  const { user, logoutUser } = useAppStore();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -91,22 +93,22 @@ export default function Header() {
       </div>
 
       {/* Main Header Bar - Content Shifted Slightly Downward */}
-      <div className="px-3 sm:px-6 md:px-12 max-w-[1536px] mx-auto flex items-stretch justify-between gap-3 sm:gap-6 min-h-[64px] sm:min-h-[72px] relative">
+      <div className="px-3 sm:px-6 md:px-12 max-w-[1536px] mx-auto flex items-stretch justify-between gap-2 sm:gap-6 min-h-[58px] sm:min-h-[72px] relative">
         {/* Logo and Title - Vertically Centered */}
-        <Link href="/" className="flex items-center gap-2.5 sm:gap-3.5 group shrink min-w-0 py-3 sm:py-3.5">
+        <Link href="/" className="flex items-center gap-2 sm:gap-3.5 group shrink min-w-0 py-2.5 sm:py-3.5">
           <Image 
             src="/logo.png" 
             alt="State Emblem of India" 
             width={48} 
             height={70} 
-            className="h-8 sm:h-10 md:h-11 w-auto object-contain shrink-0 transition-transform duration-300 group-hover:scale-105 my-auto" 
+            className="h-7 min-[360px]:h-8 sm:h-10 md:h-11 w-auto object-contain shrink-0 transition-transform duration-300 group-hover:scale-105 my-auto" 
             priority 
           />
           <div className="flex flex-col min-w-0 justify-center my-auto">
-            <h1 className="text-xs min-[360px]:text-sm sm:text-base md:text-lg font-extrabold text-[#0B1C3F] tracking-tight leading-tight truncate sm:whitespace-normal">
+            <h1 className="text-[11px] min-[360px]:text-[12px] min-[400px]:text-[13.5px] sm:text-base md:text-lg font-extrabold text-[#0B1C3F] tracking-tight leading-tight whitespace-nowrap sm:whitespace-normal">
               {t.header.title}
             </h1>
-            <p className="text-[9px] sm:text-xs text-gray-500 font-medium tracking-tight truncate hidden min-[480px]:block">
+            <p className="text-[6.5px] min-[340px]:text-[7.2px] min-[375px]:text-[8px] min-[410px]:text-[8.5px] sm:text-xs text-gray-500 font-medium tracking-tight whitespace-nowrap sm:whitespace-normal leading-tight mt-0.5">
               {t.header.subtitle}
             </p>
           </div>
@@ -240,22 +242,38 @@ export default function Header() {
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
 
-          {/* Login CTA Button on Desktop */}
+          {/* Login / User CTA Button on Desktop */}
           <div className="hidden lg:block pl-3 border-l border-gray-200 my-auto">
-            <Link 
-              href="/login"
-              className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer whitespace-nowrap"
-            >
-              <UserIcon className="w-4 h-4 text-white" />
-              <span>{t.header.nav.login}</span>
-            </Link>
+            {user ? (
+              <div className="flex items-center gap-2">
+                <span className="flex items-center gap-1.5 bg-blue-50 text-[#2563EB] border border-blue-200 px-3 py-1.5 rounded-lg text-xs font-bold shadow-2xs">
+                  <UserIcon className="w-3.5 h-3.5 text-[#2563EB]" />
+                  <span className="max-w-[120px] truncate">{user.name || user.username}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={logoutUser}
+                  className="text-xs text-slate-500 hover:text-red-600 font-semibold px-2 py-1 transition-colors cursor-pointer"
+                >
+                  {t.login?.logoutBtn || (language === 'hi' ? 'लॉग आउट' : 'Sign Out')}
+                </button>
+              </div>
+            ) : (
+              <Link 
+                href="/login"
+                className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer whitespace-nowrap"
+              >
+                <UserIcon className="w-4 h-4 text-white" />
+                <span>{t.header.nav.login}</span>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Three-Line Menu Bar */}
           <button 
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-1.5 text-gray-700 hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer my-auto flex items-center justify-center"
+            className="lg:hidden p-1.5 text-gray-700 hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 cursor-pointer my-auto flex items-center justify-center select-none"
             aria-label="Toggle navigation menu"
             aria-expanded={isMobileMenuOpen}
           >
@@ -275,29 +293,45 @@ export default function Header() {
             className="lg:hidden overflow-hidden border-t border-gray-200/80 bg-white"
           >
             <div className="min-h-0 bg-white px-4 py-4 shadow-lg">
-              <nav className="flex flex-col gap-1 text-sm font-medium text-gray-700">
+              <nav className="flex flex-col gap-1 text-sm">
                 {navItems.map((item, index) => {
                   const active = isActive(item.href);
-
-                  const linkClasses = `relative block px-3.5 py-2.5 rounded-lg text-left transition-all duration-150 ${
-                    active 
-                      ? 'bg-blue-50 text-[#2563EB] font-semibold border-l-4 border-[#2563EB]' 
-                      : 'hover:bg-gray-50 hover:text-[#2563EB] text-gray-700'
-                  }`;
 
                   return (
                     <motion.div
                       key={item.key}
-                      initial={{ opacity: 0, x: -8 }}
+                      initial={{ opacity: 0, x: -6 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.035, duration: 0.2 }}
+                      transition={{ delay: index * 0.03, duration: 0.18 }}
                     >
                       <Link 
                         href={item.href} 
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className={linkClasses}
+                        className={`group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-all duration-150 ${
+                          active 
+                            ? 'bg-slate-100/90 text-[#0B1C3F] font-semibold border border-slate-200/80 shadow-2xs' 
+                            : 'text-slate-600 hover:text-[#0B1C3F] hover:bg-slate-50 border border-transparent font-medium'
+                        }`}
                       >
-                        {item.label}
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span 
+                            className={`w-1 h-4.5 rounded-full transition-colors shrink-0 ${
+                              active ? 'bg-[#2563EB]' : 'bg-transparent'
+                            }`}
+                            aria-hidden="true"
+                          />
+                          <span className="truncate">
+                            {item.label}
+                          </span>
+                        </div>
+                        
+                        <ChevronRightIcon 
+                          className={`w-3.5 h-3.5 transition-all shrink-0 ${
+                            active 
+                              ? 'text-[#2563EB]' 
+                              : 'text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5'
+                          }`} 
+                        />
                       </Link>
                     </motion.div>
                   );
@@ -305,14 +339,33 @@ export default function Header() {
               </nav>
 
               <div className="mt-4 pt-3 border-t border-gray-100 flex flex-col gap-2">
-                <Link 
-                  href="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full flex items-center justify-center gap-2 bg-[#2563EB] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer"
-                >
-                  <UserIcon className="w-4 h-4 text-white" />
-                  <span>{t.header.nav.login}</span>
-                </Link>
+                {user ? (
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2 bg-blue-50 text-[#2563EB] border border-blue-200 px-3.5 py-2 rounded-lg text-xs font-bold">
+                      <UserIcon className="w-4 h-4 text-[#2563EB]" />
+                      <span>{user.name || user.username}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        logoutUser();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer"
+                    >
+                      <span>{t.login?.logoutBtn || (language === 'hi' ? 'लॉग आउट' : 'Sign Out')}</span>
+                    </button>
+                  </div>
+                ) : (
+                  <Link 
+                    href="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full flex items-center justify-center gap-2 bg-[#2563EB] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer"
+                  >
+                    <UserIcon className="w-4 h-4 text-white" />
+                    <span>{t.header.nav.login}</span>
+                  </Link>
+                )}
               </div>
             </div>
           </motion.div>
@@ -321,4 +374,3 @@ export default function Header() {
     </header>
   );
 }
-

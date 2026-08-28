@@ -138,15 +138,15 @@ export default function CustomScrollbar() {
     <div
       ref={trackRef}
       style={{ display: 'none' }}
-      className="hidden md:flex fixed right-0 top-0 bottom-0 w-4 z-[99999] pointer-events-auto justify-end pr-1 transition-opacity duration-300 ease-out select-none cursor-default"
+      className="hidden md:flex fixed right-0 top-0 bottom-0 w-2 z-[99999] pointer-events-auto justify-end pr-0 transition-opacity duration-300 ease-out select-none cursor-default"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
         ref={thumbRef}
-        className={`rounded-full bg-gray-400/40 hover:bg-gray-500/70 active:bg-gray-600/90 shadow-xs cursor-default transition-[opacity,width,background-color] duration-200 ease-out ${
+        className={`rounded-full bg-slate-500/40 hover:bg-slate-700/70 active:bg-slate-900 w-2 cursor-default transition-[opacity,background-color] duration-200 ease-out ${
           showThumb ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        } ${isHovered || isDragging ? 'w-2.5 bg-gray-500/80' : 'w-1.5'}`}
+        } ${isHovered || isDragging ? 'bg-slate-700/70' : ''}`}
         style={{
           height: '36px',
           transform: 'translate3d(0, 0, 0)',

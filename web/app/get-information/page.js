@@ -24,7 +24,6 @@ import {
   FileCheck2, 
   ExternalLink,
   Filter,
-  CheckCircle2,
   FileSpreadsheet
 } from 'lucide-react';
 
@@ -121,7 +120,7 @@ const SAMPLE_RECORDS = [
 export default function GetInformationPage() {
   // NOTE: Page temporarily disabled before pushing to remote repository.
   // To re-enable this page, remove or comment out the `notFound()` call below.
-  notFound();
+  // notFound();
 
   const { language, t } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
@@ -169,12 +168,6 @@ export default function GetInformationPage() {
 
         {/* Header Hero Area */}
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto pt-2 pb-2">
-          {/* Section Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-green-50 border border-green-200/90 text-green-800 text-xs font-bold uppercase tracking-wider mb-4 shadow-2xs">
-            <CheckCircle2 className="w-3.5 h-3.5 text-green-700" />
-            <span>{isHindi ? 'सार्वजनिक क्षेत्र में स्वतः उपलब्ध • ₹0 शुल्क' : 'Proactive Disclosures • ₹0 Zero Fee'}</span>
-          </div>
-
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0B1C3F] tracking-tight mb-4">
             {isHindi ? 'सार्वजनिक रिकॉर्ड एवं सूचना खोजें' : 'Search Public Information & Records'}
           </h1>

@@ -11,6 +11,9 @@ export async function POST(request) {
   try {
     const payload = await request.json();
 
+    const safeRegNo = (payload.regNo || 'DOPT').replace(/[\/\\?%*:|"<>]/g, '_');
+    const downloadFilename = `RTI_Receipt_${safeRegNo}.pdf`;
+
     // First try FastAPI service if running at http://localhost:8000/generate-receipt-pdf
     try {
       const fastApiRes = await fetch('http://localhost:8000/generate-receipt-pdf', {
@@ -25,7 +28,9 @@ export async function POST(request) {
           status: 200,
           headers: {
             'Content-Type': 'application/pdf',
-            'Content-Disposition': `inline; filename=RTI_Receipt_${payload.regNo?.replace(/\//g, '_') || 'DOPT'}.pdf`
+            'Content-Disposition': `attachment; filename="${downloadFilename}"`,
+            'Content-Length': pdfBuffer.length.toString(),
+            'Cache-Control': 'no-cache, no-store, must-revalidate'
           }
         });
       }
@@ -35,12 +40,19 @@ export async function POST(request) {
 
     // Direct Python Subprocess Fallback Execution
     const tmpDir = os.tmpdir();
-    const payloadPath = path.join(tmpDir, `rti_payload_${Date.now()}.json`);
-    const outputPath = path.join(tmpDir, `rti_receipt_${Date.now()}.pdf`);
+    const randSuffix = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const payloadPath = path.join(tmpDir, `rti_payload_${randSuffix}.json`);
+    const outputPath = path.join(tmpDir, `rti_receipt_${randSuffix}.pdf`);
 
     fs.writeFileSync(payloadPath, JSON.stringify(payload));
 
-    const aiDir = path.resolve(process.cwd(), '../ai');
+    const possibleAiDirs = [
+      path.resolve(process.cwd(), '../ai'),
+      path.resolve(process.cwd(), 'ai'),
+      path.resolve(process.cwd(), '../../ai')
+    ];
+    let aiDir = possibleAiDirs.find(d => fs.existsSync(d)) || possibleAiDirs[0];
+
     const safeAiDir = aiDir.replace(/\\/g, '/');
     const safePayloadPath = payloadPath.replace(/\\/g, '/');
     const safeOutputPath = outputPath.replace(/\\/g, '/');
@@ -76,7 +88,9 @@ export async function POST(request) {
         status: 200,
         headers: {
           'Content-Type': 'application/pdf',
-          'Content-Disposition': `inline; filename=RTI_Receipt_${payload.regNo?.replace(/\//g, '_') || 'DOPT'}.pdf`
+          'Content-Disposition': `attachment; filename="${downloadFilename}"`,
+          'Content-Length': pdfBuffer.length.toString(),
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
         }
       });
     }

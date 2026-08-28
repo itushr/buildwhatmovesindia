@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DottedWave from "../components/DottedWave";
-import AnimatedSearchBar from "../components/AnimatedSearchBar";
-import { Users, ClipboardCheck, Landmark, Clock, CheckCircle2, ArrowRight, Search, FileText } from "lucide-react";
+import { CheckCircle2, ArrowRight, Search, FileText, Zap, Lock, Scale, Landmark, Upload, Calendar } from "lucide-react";
 import {
   SearchIcon,
   DocumentSearchIcon,
@@ -19,79 +18,245 @@ import {
 } from "../components/Icons";
 import { useApp } from "../context/AppContext";
 
+const ThreeDLightningIcon = () => (
+  <div className="relative w-24 h-24 flex items-center justify-center shrink-0">
+    {/* Speed/motion lines extending left */}
+    <div className="absolute left-[3px] top-[30%] w-8 h-0.5 bg-white/40 rounded-full"></div>
+    <div className="absolute left-[-10px] top-[42%] w-14 h-1 bg-white/50 rounded-full"></div>
+    <div className="absolute left-[-3px] top-[50%] w-18 h-1.5 bg-white/60 rounded-full blur-[0.5px]"></div>
+    <div className="absolute left-[-6px] top-[60%] w-12 h-1 bg-white/50 rounded-full"></div>
+    <div className="absolute left-[10px] top-[72%] w-6 h-0.5 bg-white/40 rounded-full"></div>
+
+    {/* Drop shadow back-plate */}
+    <div className="absolute w-18 h-18 bg-blue-950/40 rounded-[18px] translate-y-3 translate-x-1 blur-md"></div>
+    
+    {/* 3D Deep Plate (Bottom Thickness) */}
+    <div className="absolute w-18 h-18 bg-blue-200/80 rounded-[18px] translate-y-[4px] translate-x-[1px] shadow-lg"></div>
+
+    {/* Front Plate (Main Body) */}
+    <div className="absolute w-18 h-18 bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-[18px] border-t border-l border-white flex items-center justify-center shadow-[inset_0_1px_2px_rgba(255,255,255,1)]">
+      <svg className="w-9 h-9 text-[#2563EB] drop-shadow-[0_1.5px_2px_rgba(37,99,235,0.25)]" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M13 2v9h7L11 22v-9H4L13 2z" />
+      </svg>
+    </div>
+  </div>
+);
+
+const ThreeDFolderIcon = () => (
+  <div className="relative w-24 h-24 flex items-center justify-center shrink-0">
+    {/* Drop shadow */}
+    <div className="absolute w-20 h-16 bg-blue-950/10 rounded-lg translate-y-4 translate-x-1 blur-md"></div>
+
+    {/* Back folder plate */}
+    <div className="absolute w-14 h-18 bg-blue-600 rounded-lg transform -rotate-6 translate-y-0.5 -translate-x-0.5 shadow-sm"></div>
+
+    {/* Pages sticking out */}
+    <div className="absolute w-14 h-18 bg-white rounded-md border border-blue-100 shadow-xs flex flex-col p-2 gap-1 transform rotate-3 -translate-y-1.5">
+      <div className="w-5 h-0.5 bg-blue-500 rounded-full"></div>
+      <div className="w-10 h-0.5 bg-blue-300/80 rounded-full"></div>
+      <div className="w-8 h-0.5 bg-blue-300/80 rounded-full"></div>
+      <div className="w-9 h-0.5 bg-blue-300/80 rounded-full"></div>
+      <div className="w-6 h-0.5 bg-blue-300/80 rounded-full"></div>
+    </div>
+
+    {/* Front folder plate (rotated/open) */}
+    <div className="absolute w-16 h-16 bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-500 rounded-lg border-t border-l border-white/50 shadow-md transform rotate-12 translate-y-2.5 translate-x-1.5 flex items-end p-1.5">
+      {/* Tab/Label on front folder */}
+      <div className="w-5 h-1.5 bg-blue-200/50 rounded-xs"></div>
+    </div>
+  </div>
+);
+
 export default function Home() {
   const { t } = useApp();
   const router = useRouter();
 
   return (
-    <div className="flex flex-col w-full bg-[#f8fafc]">
+    <div className="flex flex-col w-full bg-[#FAFAFC]">
       {/* Hero Section (Section 0) */}
-      <section className="w-full min-h-[calc(100vh-96px)] pt-10 sm:pt-14 md:pt-16 lg:pt-20 pb-8 sm:pb-10 md:pb-12 px-4 md:px-8 text-center relative overflow-hidden flex flex-col justify-between items-center bg-gradient-to-b from-[#EDF5FD] via-[#F3F7FD] to-[#F8FAFC]">
+      <section className="w-full min-h-[calc(100vh-96px)] px-4 md:px-8 text-center relative overflow-hidden flex flex-col justify-between items-center bg-[#FAFAFC]">
         {/* Background Dotted Wave Component */}
         <DottedWave />
 
-        {/* Hero Main Content with Generous Vertical Whitespace */}
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full my-auto py-2 sm:py-4">
-          <h1 className="text-[23px] min-[360px]:text-[26px] sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold text-[#0B1C3F] tracking-tight leading-[1.28] sm:leading-[1.18] mb-3.5 sm:mb-5 px-1">
-            <span className="block">{t.hero.headingLine1}</span>
-            <span className="block mt-1 sm:mt-2 text-[#2563EB]">{t.hero.headingLine2}</span>
-          </h1>
-          <p className="text-xs min-[360px]:text-sm sm:text-lg md:text-xl text-slate-600 font-medium mb-8 sm:mb-12 md:mb-14 max-w-2xl px-2">
-            {t.hero.subtitle}
-          </p>
+        {/* Top/Middle Main Content Container */}
+        <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center justify-center flex-1 w-full pt-1 sm:pt-2">
+          {/* Title & Subtitle Block - Shifted further upward */}
+          <div className="flex flex-col items-center text-center -translate-y-5 sm:-translate-y-8 md:-translate-y-12">
+            <h1 className="text-[23px] min-[360px]:text-[26px] sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold text-[#0B1C3F] tracking-tight leading-[1.28] sm:leading-[1.18] mb-2.5 sm:mb-3 px-1">
+              <span className="block">{t.hero.headingLine1}</span>
+              <span className="block mt-1 sm:mt-2">
+                {t.hero.headingLine2.includes("Accessible") ? (
+                  <>
+                    We make it <span className="text-[#2563EB]">Accessible.</span>
+                  </>
+                ) : (
+                  <span className="text-[#2563EB]">{t.hero.headingLine2}</span>
+                )}
+              </span>
+            </h1>
+            <p className="text-xs min-[360px]:text-sm sm:text-base md:text-lg text-slate-600 font-medium mb-3 sm:mb-4 max-w-2xl px-2">
+              {t.hero.subtitle}
+            </p>
 
-          {/* Integrated Animated Search Bar */}
-          <AnimatedSearchBar 
-            onSearch={(query) => {
-              if (query && query.trim()) {
-                router.push(`/submit-request?query=${encodeURIComponent(query.trim())}`);
-              }
-            }}
-            className="mb-4 sm:mb-8 md:mb-10" 
-          />
+            {/* Minimal Single Thin Line Separator */}
+            <div className="w-12 h-[1.5px] bg-[#2563EB]/40 rounded-full"></div>
+          </div>
+
+          {/* Dual Action Cards Container (Shifted up by 5% with Breathable Margin from Title) */}
+          <div className="w-full max-w-5xl xl:max-w-6xl mx-auto mt-6 sm:mt-8 md:mt-9 -translate-y-1 sm:-translate-y-2 md:-translate-y-3 flex justify-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch w-full">
+              {/* Card 1: Flash RTI - Solid Theme Primary Blue Fill */}
+              <div className="group relative bg-[#2563EB] text-white rounded-3xl border border-blue-400/40 hover:border-blue-300/70 shadow-xl shadow-blue-600/20 hover:shadow-2xl hover:shadow-blue-600/30 transition-all duration-300 p-6 sm:p-8 flex flex-col justify-between text-left overflow-hidden">
+                <div className="relative z-10 flex flex-col flex-1">
+                  {/* Content columns */}
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start">
+                    {/* Left Column: Icon + Title Block Row, and Description */}
+                    <div className="sm:col-span-7 flex flex-col items-start text-left">
+                      {/* Header Row: Icon + Title Block */}
+                      <div className="flex items-center gap-4 mb-5 w-full">
+                        <ThreeDLightningIcon />
+                        <div className="flex flex-col items-start">
+                          {t.mainActions.getInformation.badge && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded bg-white/20 backdrop-blur-xs border border-white/30 text-white text-[10px] font-bold tracking-wider mb-1 uppercase">
+                              {t.mainActions.getInformation.badge}
+                            </span>
+                          )}
+                          <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight leading-tight">
+                            {t.mainActions.getInformation.title}
+                          </h3>
+                          <span className="text-xs sm:text-sm font-semibold text-blue-100 mt-0.5">
+                            {t.mainActions.getInformation.subtitle}
+                          </span>
+                        </div>
+                      </div>
+                      {/* Description below */}
+                      <p className="text-xs sm:text-sm text-blue-100/90 font-normal leading-relaxed max-w-[340px]">
+                        {t.mainActions.getInformation.desc}
+                      </p>
+                    </div>
+
+                    {/* Right Column: Features checklist */}
+                    <div className="sm:col-span-5 flex flex-col gap-3.5 self-center justify-center pt-2 sm:pt-6 pl-0 sm:pl-4">
+                      {t.mainActions.getInformation.features.map((feat, idx) => {
+                        const icons = [
+                          <Search key="f1" className="w-5 h-5 text-white" strokeWidth={2.5} />,
+                          <Landmark key="f2" className="w-5 h-5 text-white" strokeWidth={2.2} />,
+                          <Zap key="f3" className="w-5 h-5 text-white" fill="currentColor" strokeWidth={1} />,
+                          <ShieldCheckIcon key="f4" className="w-5 h-5 text-white" strokeWidth={2} />
+                        ];
+                        return (
+                          <div key={idx} className="flex items-center gap-3 text-xs sm:text-sm text-white font-semibold">
+                            <div className="shrink-0">
+                              {icons[idx]}
+                            </div>
+                            <span>{feat}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom CTA & Footnote (No top border) */}
+                <div className="relative z-10 mt-6 flex items-center justify-between gap-4">
+                  <Link
+                    href="/get-information"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm text-[#2563EB] bg-white hover:bg-blue-50 shadow-md shadow-blue-950/20 hover:shadow-lg transition-all duration-200 cursor-pointer group/btn whitespace-nowrap"
+                  >
+                    <span>{t.mainActions.getInformation.btn}</span>
+                    <ArrowRight className="w-4 h-4 text-[#2563EB] transition-transform duration-200 group-hover/btn:translate-x-1" />
+                  </Link>
+                  <div className="flex items-center gap-1.5 text-xs text-blue-100 font-semibold">
+                    <Lock className="w-3.5 h-3.5 text-blue-200" />
+                    <span>{t.mainActions.getInformation.note}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: File an RTI - Light Shade Tonal Fill in Theme Blue (No Orange) */}
+              <div className="group relative bg-[#EEF4FE]/80 backdrop-blur-sm rounded-3xl border border-blue-200/80 hover:border-blue-400/90 shadow-lg shadow-blue-950/5 hover:shadow-xl hover:shadow-blue-950/10 transition-all duration-300 p-6 sm:p-8 flex flex-col justify-between text-left overflow-hidden">
+                <div className="relative z-10 flex flex-col flex-1">
+                  {/* Content columns */}
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start">
+                    {/* Left Column: Icon + Title Block Row, and Description */}
+                    <div className="sm:col-span-7 flex flex-col items-start text-left">
+                      {/* Header Row: Icon + Title Block */}
+                      <div className="flex items-center gap-4 mb-5 w-full">
+                        <ThreeDFolderIcon />
+                        <div className="flex flex-col items-start">
+                          {/* Empty badge height filler to match left card alignment */}
+                          <div className="h-[21px] mb-1"></div>
+                          <h3 className="text-xl sm:text-2xl font-extrabold text-[#0B1C3F] tracking-tight leading-tight">
+                            {t.mainActions.fileRTI.title}
+                          </h3>
+                          <span className="text-xs sm:text-sm font-semibold text-slate-500 mt-0.5">
+                            {t.mainActions.fileRTI.subtitle}
+                          </span>
+                        </div>
+                      </div>
+                      {/* Description below */}
+                      <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed max-w-[340px]">
+                        {t.mainActions.fileRTI.desc}
+                      </p>
+                    </div>
+
+                    {/* Right Column: Features checklist */}
+                    <div className="sm:col-span-5 flex flex-col gap-3.5 self-center justify-center pt-2 sm:pt-6 pl-0 sm:pl-4">
+                      {t.mainActions.fileRTI.features.map((feat, idx) => {
+                        const icons = [
+                          <ShieldCheckIcon key="r1" className="w-5 h-5 text-[#2563EB]" strokeWidth={2} />,
+                          <Upload key="r2" className="w-5 h-5 text-[#2563EB]" strokeWidth={2.2} />,
+                          <Search key="r3" className="w-5 h-5 text-[#2563EB]" strokeWidth={2.5} />,
+                          <Calendar key="r4" className="w-5 h-5 text-[#2563EB]" strokeWidth={2} />
+                        ];
+                        return (
+                          <div key={idx} className="flex items-center gap-3 text-xs sm:text-sm text-slate-700 font-semibold">
+                            <div className="shrink-0">
+                              {icons[idx]}
+                            </div>
+                            <span>{feat}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom CTA & Footnote (No top border) */}
+                <div className="relative z-10 mt-6 flex items-center justify-between gap-4">
+                  <Link
+                    href="/submit-request"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm text-[#2563EB] bg-white hover:bg-blue-50/80 border border-blue-200 hover:border-blue-400 shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer group/btn whitespace-nowrap"
+                  >
+                    <span>{t.mainActions.fileRTI.btn}</span>
+                    <ArrowRight className="w-4 h-4 text-[#2563EB] transition-transform duration-200 group-hover/btn:translate-x-1" />
+                  </Link>
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500 font-semibold">
+                    <Lock className="w-3.5 h-3.5 text-slate-400" />
+                    <span>{t.mainActions.fileRTI.note}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Stats Strip Container (Placed Inside Bottom of Hero Section) */}
-        <div className="w-full max-w-6xl mx-auto relative z-10 mt-auto pt-6 sm:pt-10 mb-0 sm:mb-2">
-          <div className="bg-white rounded-2xl shadow-xl shadow-blue-950/5 border border-gray-100/90 p-4 sm:p-6 md:p-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 sm:divide-gray-200">
-              
-              {/* Stat 1 */}
-              <div className="flex flex-row items-center justify-start gap-4 py-3.5 sm:py-2 px-2 sm:px-4 md:px-6">
-                <Users className="w-8 h-8 sm:w-9 sm:h-9 text-[#0D8A44] shrink-0" strokeWidth={1.8} />
-                <div className="flex flex-col text-left">
-                  <span className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0B1C3F] tracking-tight">12,15,072+</span>
-                  <span className="text-xs sm:text-xs md:text-sm text-gray-500 font-semibold mt-0.5">{t.hero.stats.requestsReceived}</span>
-                </div>
-              </div>
-
-              {/* Stat 2 */}
-              <div className="flex flex-row items-center justify-start gap-4 py-3.5 sm:py-2 px-2 sm:px-4 md:px-6">
-                <ClipboardCheck className="w-8 h-8 sm:w-9 sm:h-9 text-[#0D8A44] shrink-0" strokeWidth={1.8} />
-                <div className="flex flex-col text-left">
-                  <span className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0B1C3F] tracking-tight">99%</span>
-                  <span className="text-xs sm:text-xs md:text-sm text-gray-500 font-semibold mt-0.5">{t.hero.stats.replyPercentage}</span>
-                </div>
-              </div>
-
-              {/* Stat 3 */}
-              <div className="flex flex-row items-center justify-start gap-4 py-3.5 sm:py-2 px-2 sm:px-4 md:px-6">
-                <Landmark className="w-8 h-8 sm:w-9 sm:h-9 text-[#0D8A44] shrink-0" strokeWidth={1.8} />
-                <div className="flex flex-col text-left">
-                  <span className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0B1C3F] tracking-tight">28,289+</span>
-                  <span className="text-xs sm:text-xs md:text-sm text-gray-500 font-semibold mt-0.5">{t.hero.stats.publicAuthorities}</span>
-                </div>
-              </div>
-
-              {/* Stat 4 */}
-              <div className="flex flex-row items-center justify-start gap-4 py-3.5 sm:py-2 px-2 sm:px-4 md:px-6">
-                <Clock className="w-8 h-8 sm:w-9 sm:h-9 text-[#0D8A44] shrink-0" strokeWidth={1.8} />
-                <div className="flex flex-col text-left">
-                  <span className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0B1C3F] tracking-tight">24/7</span>
-                  <span className="text-xs sm:text-xs md:text-sm text-gray-500 font-semibold mt-0.5">{t.hero.stats.onlinePortal}</span>
-                </div>
-              </div>
-
+        {/* Three Trust Icons Bar at the Very Bottom of Hero Section */}
+        <div className="relative z-10 w-full max-w-5xl xl:max-w-6xl mx-auto mt-auto pt-6 pb-6 sm:pb-8 border-t border-slate-200/60">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 w-full">
+            <div className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-600 font-semibold">
+              <ShieldCheckIcon className="w-5 h-5 text-blue-600" />
+              <span>{t.trust.badges.secure}</span>
+            </div>
+            <div className="hidden sm:block w-px h-6 bg-slate-200/80"></div>
+            <div className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-600 font-semibold">
+              <CheckCircle2 className="w-5 h-5 text-blue-600" strokeWidth={2.5} />
+              <span>{t.trust.badges.verified}</span>
+            </div>
+            <div className="hidden sm:block w-px h-6 bg-slate-200/80"></div>
+            <div className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-600 font-semibold">
+              <Scale className="w-5 h-5 text-blue-600" />
+              <span>{t.trust.badges.act}</span>
             </div>
           </div>
         </div>
@@ -184,177 +349,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Main Actions Section (Dual Decision Pathway) */}
-      <section className="w-full py-16 md:py-24 px-4 sm:px-6 md:px-8 bg-gradient-to-b from-[#EDF5FD] via-[#F3F7FD] to-[#F8FAFC] border-t border-slate-200/60 relative overflow-hidden">
-        {/* Background Dotted Wave Component */}
-        <DottedWave variant="section-feathered" />
 
-        <div className="w-full max-w-6xl mx-auto relative z-10">
-          
-          {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
-            <div className="inline-flex items-center px-3.5 py-1.5 rounded-lg bg-blue-50/90 border border-blue-200/70 text-blue-700 text-xs font-bold uppercase tracking-wider mb-3 shadow-xs">
-              <span>{t.mainActions.sectionBadge || "Citizen Access Pathways"}</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0B1C3F] tracking-tight mb-3">
-              {t.mainActions.heading || "Choose How You Want to Access Information"}
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-2xl mx-auto">
-              {t.mainActions.subtitle || "Search proactively published public records for free, or submit a formal statutory request under the RTI Act, 2005."}
-            </p>
-          </div>
-
-          {/* Dual Cards Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch">
-            
-            {/* Card 1: Get Information (Emerald Theme) */}
-            <div className="group relative bg-white/95 backdrop-blur-sm rounded-2xl border border-emerald-200/80 hover:border-emerald-400/90 shadow-lg shadow-emerald-950/5 hover:shadow-xl hover:shadow-emerald-950/10 transition-all duration-300 p-6 sm:p-8 flex flex-col justify-between h-full overflow-hidden">
-              
-              {/* Subtle ambient corner gradient */}
-              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-emerald-100/50 via-emerald-50/20 to-transparent rounded-bl-full pointer-events-none transition-opacity duration-300 group-hover:from-emerald-200/40" />
-
-              <div className="relative z-10 flex flex-col flex-1">
-                
-                {/* Top Badge & Category */}
-                <div className="flex items-center justify-between gap-2 mb-5">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 border border-emerald-200/80 text-emerald-800 shadow-2xs">
-                    {t.mainActions.getInformation.badge}
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-600 tracking-wider">
-                    SECTION 4 DISCLOSURES
-                  </span>
-                </div>
-
-                {/* Header with Squircle Icon & Title */}
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/80 border border-emerald-200/90 text-emerald-700 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 group-hover:border-emerald-300 transition-all duration-200">
-                    <Search className="w-6 h-6 sm:w-7 sm:h-7 text-emerald-700" strokeWidth={2} />
-                  </div>
-                  <div className="flex flex-col">
-                    <h3 className="text-xl sm:text-2xl font-extrabold text-[#0B1C3F] tracking-tight group-hover:text-emerald-900 transition-colors">
-                      {t.mainActions.getInformation.title}
-                    </h3>
-                    <span className="text-xs sm:text-sm font-medium text-emerald-700">
-                      {t.mainActions.getInformation.subtitle}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed mb-6 min-h-[44px]">
-                  {t.mainActions.getInformation.desc}
-                </p>
-
-                {/* Feature Checklist */}
-                <div className="space-y-2.5 mb-8 pt-4 border-t border-slate-100 mt-auto">
-                  {(t.mainActions.getInformation.features || []).map((feat, idx) => (
-                    <div key={idx} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-700 font-medium">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100/80 text-emerald-700 flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" strokeWidth={2.5} />
-                      </div>
-                      <span>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-
-              </div>
-
-              {/* Bottom CTA & Footnote */}
-              <div className="relative z-10 pt-4 mt-auto border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                <Link
-                  href="/get-information"
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-[#0D8A44] to-[#0B7339] hover:from-[#0B7339] hover:to-[#095C2E] shadow-md shadow-emerald-900/15 hover:shadow-lg hover:shadow-emerald-900/25 transition-all duration-200 cursor-pointer group/btn whitespace-nowrap shrink-0"
-                >
-                  <span>{t.mainActions.getInformation.btn}</span>
-                  <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1" />
-                </Link>
-                <span className="text-[11px] text-slate-600 font-medium text-center sm:text-right">
-                  {t.mainActions.getInformation.note}
-                </span>
-              </div>
-
-            </div>
-
-            {/* Card 2: File an RTI (Royal Blue Theme) */}
-            <div className="group relative bg-white/95 backdrop-blur-sm rounded-2xl border border-blue-200/80 hover:border-blue-400/90 shadow-lg shadow-blue-950/5 hover:shadow-xl hover:shadow-blue-950/10 transition-all duration-300 p-6 sm:p-8 flex flex-col justify-between h-full overflow-hidden">
-              
-              {/* Subtle ambient corner gradient */}
-              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-blue-100/50 via-blue-50/20 to-transparent rounded-bl-full pointer-events-none transition-opacity duration-300 group-hover:from-blue-200/40" />
-
-              <div className="relative z-10 flex flex-col flex-1">
-                
-                {/* Top Badge & Category */}
-                <div className="flex items-center justify-between gap-2 mb-5">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 border border-blue-200/80 text-blue-800 shadow-2xs">
-                    {t.mainActions.fileRTI.badge}
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-600 tracking-wider">
-                    SECTION 6(1) FILING
-                  </span>
-                </div>
-
-                {/* Header with Squircle Icon & Title */}
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/80 border border-blue-200/90 text-blue-700 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 group-hover:border-blue-300 transition-all duration-200">
-                    <FileText className="w-6 h-6 sm:w-7 sm:h-7 text-blue-700" strokeWidth={2} />
-                  </div>
-                  <div className="flex flex-col">
-                    <h3 className="text-xl sm:text-2xl font-extrabold text-[#0B1C3F] tracking-tight group-hover:text-blue-900 transition-colors">
-                      {t.mainActions.fileRTI.title}
-                    </h3>
-                    <span className="text-xs sm:text-sm font-medium text-blue-700">
-                      {t.mainActions.fileRTI.subtitle}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed mb-6 min-h-[44px]">
-                  {t.mainActions.fileRTI.desc}
-                </p>
-
-                {/* Feature Checklist */}
-                <div className="space-y-2.5 mb-8 pt-4 border-t border-slate-100 mt-auto">
-                  {(t.mainActions.fileRTI.features || []).map((feat, idx) => (
-                    <div key={idx} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-700 font-medium">
-                      <div className="w-4 h-4 rounded-full bg-blue-100/80 text-blue-700 flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-700" strokeWidth={2.5} />
-                      </div>
-                      <span>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-
-              </div>
-
-              {/* Bottom CTA & Footnote */}
-              <div className="relative z-10 pt-4 mt-auto border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                <Link
-                  href="/submit-request"
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-[#1A4BBA] to-[#153E9A] hover:from-[#153E9A] hover:to-[#0F2F75] shadow-md shadow-blue-900/15 hover:shadow-lg hover:shadow-blue-900/25 transition-all duration-200 cursor-pointer group/btn whitespace-nowrap shrink-0"
-                >
-                  <span>{t.mainActions.fileRTI.btn}</span>
-                  <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1" />
-                </Link>
-                <span className="text-[11px] text-slate-600 font-medium text-center sm:text-right">
-                  {t.mainActions.fileRTI.note}
-                </span>
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* Bottom Helpful Pro-Tip Banner */}
-          {t.mainActions.tip && (
-            <div className="mt-8 bg-blue-50/70 border border-blue-200/60 rounded-xl p-3.5 sm:p-4 text-center flex items-center justify-center gap-2.5 text-xs sm:text-sm text-slate-700">
-              <span className="text-base">💡</span>
-              <span className="font-medium">{t.mainActions.tip}</span>
-            </div>
-          )}
-
-        </div>
-      </section>
 
       {/* Trust & Compliance Section */}
       <section className="w-full py-16 md:py-20 px-4 md:px-8 bg-white border-t border-slate-200">
