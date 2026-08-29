@@ -5,7 +5,6 @@ export function identify_authority(query) {
     2801 | Ministry of Finance | Ministry of Finance
     2802 | Ministry of Education | Ministry of Education
     2803 | Ministry of Health and Family Welfare | Ministry of Health and Family Welfare
-    2804 | Ministry of Road Transport and Highways | Ministry of Road Transport and Highways
     2805 | National Highways Authority of India | Ministry of Road Transport and Highways
     2806 | Indian Railways | Ministry of Railways
     2807 | Ministry of Home Affairs | Ministry of Home Affairs
