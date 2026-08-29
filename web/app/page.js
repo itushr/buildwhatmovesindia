@@ -81,17 +81,11 @@ export default function Home() {
         {/* Top/Middle Main Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center justify-center flex-1 w-full pt-1 sm:pt-2">
           {/* Title & Subtitle Block - Shifted further upward */}
-          <div className="flex flex-col items-center text-center -translate-y-5 sm:-translate-y-8 md:-translate-y-12">
+          <div className="flex flex-col items-center text-center mt-10 lg:mt-0 lg:-translate-y-12">
             <h1 className="text-[23px] min-[360px]:text-[26px] sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold text-[#0B1C3F] tracking-tight leading-[1.28] sm:leading-[1.18] mb-2.5 sm:mb-3 px-1">
               <span className="block">{t.hero.headingLine1}</span>
               <span className="block mt-1 sm:mt-2">
-                {t.hero.headingLine2.includes("Accessible") ? (
-                  <>
-                    We make it <span className="text-[#2563EB]">Accessible.</span>
-                  </>
-                ) : (
                   <span className="text-[#2563EB]">{t.hero.headingLine2}</span>
-                )}
               </span>
             </h1>
             <p className="text-xs min-[360px]:text-sm sm:text-base md:text-lg text-slate-600 font-medium mb-3 sm:mb-4 max-w-2xl px-2">
@@ -242,7 +236,7 @@ export default function Home() {
         </div>
 
         {/* Three Trust Icons Bar at the Very Bottom of Hero Section */}
-        <div className="relative z-10 w-full max-w-5xl xl:max-w-6xl mx-auto mt-auto pt-6 pb-6 sm:pb-8 border-t border-slate-200/60">
+        <div className="relative z-10 w-full max-w-5xl xl:max-w-6xl mx-auto mt-auto pt-6 pb-6 sm:pb-8 border-t border-slate-200/60 hidden md:block">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 w-full">
             <div className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-600 font-semibold">
               <ShieldCheckIcon className="w-5 h-5 text-blue-600" />
@@ -439,7 +433,6 @@ export default function Home() {
             <span>{t.trust.hallmarkLeft}</span>
             <span>{t.trust.hallmarkRight}</span>
           </div>
-
         </div>
       </section>
     </div>

@@ -104,7 +104,7 @@ export default function Header() {
             className="h-7 min-[360px]:h-8 sm:h-10 md:h-11 w-auto object-contain shrink-0 transition-transform duration-300 group-hover:scale-105 my-auto" 
             priority 
           />
-          <div className="flex flex-col min-w-0 justify-center my-auto">
+          <div className="flex flex-col min-w-0 justify-center my-auto lg:hidden xl:flex">
             <h1 className="text-[11px] min-[360px]:text-[12px] min-[400px]:text-[13.5px] sm:text-base md:text-lg font-extrabold text-[#0B1C3F] tracking-tight leading-tight whitespace-nowrap sm:whitespace-normal">
               {t.header.title}
             </h1>
