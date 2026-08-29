@@ -1,25 +1,23 @@
 "use client";
 
+import { useEffect, useState, useRef } from "react";
 import { Sora } from "next/font/google";
-import Sidebar from "./Sidebar";
 import {
   CornerDownLeft,
-  Loader,
-  CircleCheckBig,
-  OctagonAlert,
   ChevronsRight,
   ChevronUp,
   ChevronDown,
   Menu,
   X,
 } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
-import Table from "./Table";
-import Link from "next/link";
-import Header from "./Header";
 import { useAppStore } from "@/store/useAppStore";
 import { useRouter } from "next/navigation";
+import Sidebar from "./Sidebar";
+import Table from "./Table";
 import DottedWave from "@/components/DottedWave";
+import Link from "next/link";
+import Header from "./Header";
+import Step from "./Step";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -37,14 +35,13 @@ const initialSteps = [
 export default function FlashRTI() {
   const { user } = useAppStore();
   const router = useRouter();
+  const abortControllerRef = useRef(null);
 
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
   const [showSteps, setShowSteps] = useState(true);
-
-  const abortControllerRef = useRef(null);
 
   const [histories, setHistories] = useState([]);
   const [activeHistoryId, setActiveHistoryId] = useState(null);
@@ -59,7 +56,6 @@ export default function FlashRTI() {
 
   // Mobile sidebar state
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const [steps, setSteps] = useState(initialSteps);
 
   const resetSteps = () => {
@@ -136,7 +132,6 @@ export default function FlashRTI() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchHistories();
   }, []);
 
@@ -170,6 +165,9 @@ export default function FlashRTI() {
       abortControllerRef.current.abort();
     }
 
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     if (
       activeHistoryId !== null &&
       queryText.trim() !== originalQuery.trim()
@@ -183,11 +181,6 @@ export default function FlashRTI() {
     setResult(null);
     setShowSteps(true);
     resetSteps();
-
-    const protocol =
-      window.location.protocol === "https:" ? "wss:" : "ws:";
-
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
 
     try {
       // Step 0: Identify concerned public authority
@@ -377,7 +370,7 @@ export default function FlashRTI() {
     } catch (err) {
       if (controller.signal.aborted) return;
       console.error("Step execution error:", err);
-      setError("An error occurred during query execution. Please ensure the agent backend is running.");
+      setError("Something went wrong");
       setLoading(false);
       setSteps((prev) =>
         prev.map((s) => (s.status === "working" ? { ...s, status: "error" } : s))
@@ -788,78 +781,3 @@ export default function FlashRTI() {
     </div>
   );
 }
-
-const Step = ({
-  text,
-  status,
-  estimated = 13,
-}) => {
-  const [prevStatus, setPrevStatus] = useState(status);
-  const [prevEstimated, setPrevEstimated] = useState(estimated);
-  const [time, setTime] = useState(estimated);
-
-  if (status !== prevStatus || estimated !== prevEstimated) {
-    setPrevStatus(status);
-    setPrevEstimated(estimated);
-    setTime(estimated);
-  }
-
-  useEffect(() => {
-    if (status !== "working") return;
-
-    const timer = setInterval(() => {
-      setTime((prev) => Math.max(0, prev - 1));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [status]);
-
-  return (
-    <div
-      className="
-        flex gap-2
-        bg-[#E9E8E1]
-        text-[#686861]
-        rounded-lg
-        p-2
-        shadow-[inset_0_0_0_0.3px_#aaa]
-        min-w-0
-      "
-    >
-      <div className="pt-px shrink-0">
-        {status === "done" ? (
-          <CircleCheckBig size={17} />
-        ) : status === "error" ? (
-          <OctagonAlert size={17} />
-        ) : (
-          <Loader
-            size={17}
-            className={
-              status === "working"
-                ? "animate-spin"
-                : ""
-            }
-          />
-        )}
-      </div>
-
-      <div className="min-w-0">
-        <p className="wrap-break-word">
-          {text}
-        </p>
-
-        <p className="text-sm opacity-80">
-          {status === "working"
-            ? time > 0
-              ? `estimated time ${time}s`
-              : "taking longer than usual"
-            : status === "done"
-              ? "completed"
-              : status === "error"
-                ? "information not found"
-                : "yet to start"}
-        </p>
-      </div>
-    </div>
-  );
-};
