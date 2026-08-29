@@ -214,14 +214,36 @@ export default function FlashRTI() {
         return;
       }
 
-      setSteps((prev) => {
-        const next = prev.map((s, idx) => {
+
+      if (data0.abort === true) {
+        setSteps((prev) =>
+          prev.map((s, idx) =>
+            idx === 0 ? { ...s, status: "done" } : s
+          )
+        );
+
+        if (data0.details) {
+          setResult(data0.details);
+        }
+
+        setLoading(false);
+
+        if (data0.historyId) {
+          setActiveHistoryId(data0.historyId);
+          setOriginalQuery(queryText);
+          fetchHistories();
+        }
+
+        return;
+      }
+
+      setSteps((prev) =>
+        prev.map((s, idx) => {
           if (idx === 0) return { ...s, status: "done" };
           if (idx === 1) return { ...s, status: "working" };
           return s;
-        });
-        return next;
-      });
+        })
+      );
 
       // Step 1: Find available government data sources
       const res1 = await fetch("/api/run-step", {
@@ -249,14 +271,35 @@ export default function FlashRTI() {
         return;
       }
 
-      setSteps((prev) => {
-        const next = prev.map((s, idx) => {
+      if (data1.abort === true) {
+        setSteps((prev) =>
+          prev.map((s, idx) =>
+            idx === 1 ? { ...s, status: "done" } : s
+          )
+        );
+
+        if (data1.details) {
+          setResult(data1.details);
+        }
+
+        setLoading(false);
+
+        if (data1.historyId) {
+          setActiveHistoryId(data1.historyId);
+          setOriginalQuery(queryText);
+          fetchHistories();
+        }
+
+        return;
+      }
+
+      setSteps((prev) =>
+        prev.map((s, idx) => {
           if (idx === 1) return { ...s, status: "done" };
           if (idx === 2) return { ...s, status: "working" };
           return s;
-        });
-        return next;
-      });
+        })
+      );
 
       // Step 2: Select most relevant data source
       const res2 = await fetch("/api/run-step", {
@@ -284,14 +327,36 @@ export default function FlashRTI() {
         return;
       }
 
-      setSteps((prev) => {
-        const next = prev.map((s, idx) => {
+
+      if (data2.abort === true) {
+        setSteps((prev) =>
+          prev.map((s, idx) =>
+            idx === 2 ? { ...s, status: "done" } : s
+          )
+        );
+
+        if (data2.details) {
+          setResult(data2.details);
+        }
+
+        setLoading(false);
+
+        if (data2.historyId) {
+          setActiveHistoryId(data2.historyId);
+          setOriginalQuery(queryText);
+          fetchHistories();
+        }
+
+        return;
+      }
+
+      setSteps((prev) =>
+        prev.map((s, idx) => {
           if (idx === 2) return { ...s, status: "done" };
           if (idx === 3) return { ...s, status: "working" };
           return s;
-        });
-        return next;
-      });
+        })
+      );
 
       // Step 3: Retrieve necessary information the source
       const res3 = await fetch("/api/run-step", {
@@ -319,14 +384,36 @@ export default function FlashRTI() {
         return;
       }
 
-      setSteps((prev) => {
-        const next = prev.map((s, idx) => {
+
+      if (data3.abort === true) {
+        setSteps((prev) =>
+          prev.map((s, idx) =>
+            idx === 3 ? { ...s, status: "done" } : s
+          )
+        );
+
+        if (data3.details) {
+          setResult(data3.details);
+        }
+
+        setLoading(false);
+
+        if (data3.historyId) {
+          setActiveHistoryId(data3.historyId);
+          setOriginalQuery(queryText);
+          fetchHistories();
+        }
+
+        return;
+      }
+
+      setSteps((prev) =>
+        prev.map((s, idx) => {
           if (idx === 3) return { ...s, status: "done" };
           if (idx === 4) return { ...s, status: "working" };
           return s;
-        });
-        return next;
-      });
+        })
+      );
 
       // Step 4: Convert raw data to presentable form
       const res4 = await fetch("/api/run-step", {
@@ -354,9 +441,12 @@ export default function FlashRTI() {
         return;
       }
 
+
       setSteps((prev) => {
         return prev.map((s) => ({ ...s, status: "done" }));
       });
+
+
       setResult(data4.details);
       setLoading(false);
       setShowSteps(false);
@@ -659,19 +749,19 @@ export default function FlashRTI() {
             {/* ================= ERROR ================= */}
             {error && (
               <div className="mt-8 text-[15px] sm:text-[16px]">
-                <p>
-                  An error occurred while agents are working.{" "}
-                  <span
-                    className="hover:underline text-blue-700 cursor-pointer"
-                    onClick={retryQuery}
-                  >
-                    retry
-                  </span>
-                </p>
+                {(typeof error === "string" && error.startsWith("429")) ? <p>Too many requests! Please try again after some time.</p> :
 
-                <p className="mt-0.5 opacity-90 wrap-break-word">
-                  {error}
-                </p>
+                  <p>
+                    An error occurred while agents are working.{" "}
+                    <span
+                      className="hover:underline text-blue-700 cursor-pointer"
+                      onClick={retryQuery}
+                    >
+                      retry
+                    </span>
+                  </p>
+                }
+                <p>{error}</p>
               </div>
             )}
 
@@ -704,15 +794,14 @@ export default function FlashRTI() {
                   </div>
                 )}
 
-                {result.is_relevant &&
-                  !result.is_sufficient && (
-                    <div className="mt-8 text-[15px] sm:text-[16px]">
-                      <p>
-                        Could not find sufficient information
-                        regarding your query.{" "}
-                        <Link href="/submit-request">
-                          <span
-                            className="
+                {(result.is_relevant && !result.report_data) && !result.is_sufficient && (
+                  <div className="mt-8 text-[15px] sm:text-[16px]">
+                    <p>
+                      Could not find sufficient information
+                      regarding your query.{" "}
+                      <Link href="/submit-request">
+                        <span
+                          className="
                               hover:underline
                               text-blue-700
                               cursor-pointer
@@ -721,14 +810,14 @@ export default function FlashRTI() {
                               items-center
                               ml-1
                             "
-                          >
-                            File RTI
-                            <ChevronsRight size={18} />
-                          </span>
-                        </Link>
-                      </p>
-                    </div>
-                  )}
+                        >
+                          File RTI
+                          <ChevronsRight size={18} />
+                        </span>
+                      </Link>
+                    </p>
+                  </div>
+                )}
 
                 {result.report_data &&
                   result.report_data.map((item, index) => {

@@ -72,18 +72,45 @@ export async function POST(request) {
             const authorityResult = await identify_authority(query);
             const authorityData = typeof authorityResult === "string" ? JSON.parse(authorityResult) : authorityResult;
 
+            if (authorityData.jurisdiction === "state") {
+                const errResult = {
+                    is_relevant: true,
+                    is_sufficient: true,
+                    missing_points: null,
+                    report_data: [
+                        {
+                            "type": "plain",
+                            "content": "This matter falls under the State Government and not the Government of India. Please visit the RTI portal of the concerned State Government."
+                        },]
+                };
+                const historyId = await saveHistory(query, 0, "success", errResult);
+                return NextResponse.json({
+                    status: "done",
+                    step: 0,
+                    error: null,
+                    abort: true,
+                    details: errResult,
+                    historyId
+                });
+            }
+
             if (authorityData.jurisdiction !== "center") {
                 const errResult = {
-                    is_relevant: false,
-                    is_sufficient: false,
-                    missing_points: "That doesn't come under Government of India",
-                    report_data: []
+                    is_relevant: true,
+                    is_sufficient: true,
+                    missing_points: null,
+                    report_data: [
+                        {
+                            "type": "plain",
+                            "content": "This matter doesn't falls under the Government of India."
+                        },]
                 };
-                const historyId = await saveHistory(query, 0, "error", errResult);
+                const historyId = await saveHistory(query, 0, "success", errResult);
                 return NextResponse.json({
-                    status: "error",
+                    status: "done",
                     step: 0,
-                    error: errResult.missing_points,
+                    error: null,
+                    abort: true,
                     details: errResult,
                     historyId
                 });
@@ -91,16 +118,21 @@ export async function POST(request) {
 
             if (!authorityData.authority) {
                 const errResult = {
-                    is_relevant: false,
-                    is_sufficient: false,
-                    missing_points: "Could not find Concerned Public Authority",
-                    report_data: []
+                    is_relevant: true,
+                    is_sufficient: true,
+                    missing_points: null,
+                    report_data: [
+                        {
+                            "type": "plain",
+                            "content": "Concerned Public Authority is not registered on RTI portal!"
+                        },]
                 };
-                const historyId = await saveHistory(query, 0, "error", errResult);
+                const historyId = await saveHistory(query, 0, "success", errResult);
                 return NextResponse.json({
-                    status: "error",
+                    status: "done",
                     step: 0,
-                    error: errResult.missing_points,
+                    error: null,
+                    abort: true,
                     details: errResult,
                     historyId
                 });
@@ -116,25 +148,45 @@ export async function POST(request) {
         if (step === 1) {
             const { authorityData } = context;
             if (!authorityData || !authorityData.authority || !authorityData.authority.id) {
-                return NextResponse.json(
-                    { status: "error", error: "authorityData is required in context for step 1" },
-                    { status: 400 }
-                );
+                const errResult = {
+                    is_relevant: true,
+                    is_sufficient: true,
+                    missing_points: null,
+                    report_data: [
+                        {
+                            "type": "plain",
+                            "content": "Concerned Public Authority is not registered on RTI portal!"
+                        },]
+                };
+                const historyId = await saveHistory(query, 1, "success", errResult);
+                return NextResponse.json({
+                    status: "done",
+                    step: 1,
+                    abort: true,
+                    error: null,
+                    details: errResult,
+                    historyId
+                });
             }
             const authority_id = authorityData.authority.id;
             const services = await getAuthorityServices(authority_id);
             if (!services || services.length === 0) {
                 const errResult = {
-                    is_relevant: false,
-                    is_sufficient: false,
-                    missing_points: "No data apis available from Authority",
-                    report_data: []
+                    is_relevant: true,
+                    is_sufficient: true,
+                    missing_points: "",
+                    report_data: [
+                        {
+                            "type": "plain",
+                            "content": "The concerned authority has not added any data services yet!"
+                        },]
                 };
-                const historyId = await saveHistory(query, 1, "error", errResult);
+                const historyId = await saveHistory(query, 1, "success", errResult);
                 return NextResponse.json({
-                    status: "error",
+                    status: "done",
                     step: 1,
-                    error: errResult.missing_points,
+                    error: null,
+                    abort: true,
                     details: errResult,
                     historyId
                 });
@@ -150,26 +202,46 @@ export async function POST(request) {
         if (step === 2) {
             const { services } = context;
             if (!services || !Array.isArray(services)) {
-                return NextResponse.json(
-                    { status: "error", error: "services array is required in context for step 2" },
-                    { status: 400 }
-                );
+                const errResult = {
+                    is_relevant: true,
+                    is_sufficient: true,
+                    missing_points: "",
+                    report_data: [
+                        {
+                            "type": "plain",
+                            "content": "The concerned authority has not added any data services yet!"
+                        },]
+                };
+                const historyId = await saveHistory(query, 2, "success", errResult);
+                return NextResponse.json({
+                    status: "done",
+                    step: 2,
+                    error: null,
+                    abort: true,
+                    details: errResult,
+                    historyId
+                });
             }
             const serviceResult = await select_service(services, query);
             const serviceData = typeof serviceResult === "string" ? JSON.parse(serviceResult) : serviceResult;
 
             if (!serviceData.service || !serviceData.service.endpoint) {
                 const errResult = {
-                    is_relevant: false,
-                    is_sufficient: false,
-                    missing_points: serviceData.service ? "Error : No endpoint available in selected service" : "No available service can provide the requested information.",
-                    report_data: []
+                    is_relevant: true,
+                    is_sufficient: true,
+                    missing_points: null,
+                    report_data: [
+                        {
+                            "type": "plain",
+                            "content": "Could not found data service that matches your query!"
+                        },]
                 };
-                const historyId = await saveHistory(query, 2, "error", errResult);
+                const historyId = await saveHistory(query, 2, "success", errResult);
                 return NextResponse.json({
-                    status: "error",
+                    status: "done",
                     step: 2,
-                    error: errResult.missing_points,
+                    error: null,
+                    abort: true,
                     details: errResult,
                     historyId
                 });
@@ -204,6 +276,15 @@ export async function POST(request) {
             if (data === undefined) {
                 return NextResponse.json(
                     { status: "error", error: "data is required in context for step 4" },
+                    { status: 400 }
+                );
+            }
+            if (data == null) {
+                return NextResponse.json(
+                    {
+                        status: "error",
+                        error: "data is required in context for step 4"
+                    },
                     { status: 400 }
                 );
             }

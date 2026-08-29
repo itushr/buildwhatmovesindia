@@ -1,10 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
 
-const apiKeys = [
-    process.env.GEMINI_API_KEY_1,
-    process.env.GEMINI_API_KEY_2,
-    process.env.GEMINI_API_KEY_3,
-].filter(Boolean);
+const apiKeys = [];
+
+for (let i = 1; ; i++) {
+    const key = process.env[`GEMINI_API_KEY_${i}`];
+    if (!key) break;
+    apiKeys.push(key);
+}
 
 if (apiKeys.length === 0) {
     throw new Error("No Gemini API keys configured");
@@ -47,7 +49,11 @@ export async function askGemini({
             throw new Error("Gemini returned an empty response");
         }
 
-        return JSON.parse(interaction.output_text);
+        const data = JSON.parse(interaction.output_text);
+        console.log(
+            `GEMINI_LOG : response = ${JSON.stringify(data, null, 2)}`
+        );
+        return data;
 
     } catch (error) {
         console.error(
