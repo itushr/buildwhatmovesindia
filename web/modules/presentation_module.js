@@ -1,4 +1,3 @@
-import { getService } from "@/modules/get_service_data";
 import { askLLM } from "@/services/llm";
 
 export async function data_presentation(data, query) {

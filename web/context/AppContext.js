@@ -23,8 +23,8 @@ export const dictionary = {
       langLabel: "English"
     },
     hero: {
-      headingLine1: "Your Right to Information",
-      headingLine2: "Our Commitment to Transparency",
+      headingLine1: "Your Right to Information.",
+      headingLine2: "Our Commitment to Transparency.",
       subtitle: "Choose the faster way to get information or file an official request.",
       stats: {
         requestsReceived: "Requests Received",
@@ -402,8 +402,8 @@ export const dictionary = {
       langLabel: "हिन्दी"
     },
     hero: {
-      headingLine1: "सूचना का आपका अधिकार",
-      headingLine2: "पारदर्शिता के प्रति हमारी प्रतिबद्धता",
+      headingLine1: "सूचना का आपका अधिकार.",
+      headingLine2: "पारदर्शिता के प्रति हमारी प्रतिबद्धता.",
       subtitle: "सूचना प्राप्त करने या आधिकारिक आवेदन दर्ज करने का तीव्र मार्ग चुनें।",
       stats: {
         requestsReceived: "प्राप्त कुल आवेदन",
