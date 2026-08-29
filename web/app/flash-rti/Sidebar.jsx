@@ -63,7 +63,7 @@ const HistoryItem = ({ active, title, onClick }) => {
             className={`text-sm p-2 hover:bg-slate-200/50 rounded-sm cursor-pointer ${active && "bg-slate-200/50"
                 }`}
         >
-            <p>{title.length > 35 ? title.slice(0, 35) + "..." : title}</p>
+            <p>{title.length > 35 ? title.slice(0, 32) + "..." : title}</p>
         </div>
     )
 }
