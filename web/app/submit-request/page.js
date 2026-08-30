@@ -10,10 +10,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import DottedWave from '../../components/DottedWave';
 import { useApp } from '../../context/AppContext';
 import { useAppStore } from '../../store/useAppStore';
-import { 
-  ShieldCheckIcon, 
-  DocumentTextIcon, 
-  ArrowRightIcon, 
+import {
+  ShieldCheckIcon,
+  DocumentTextIcon,
+  ArrowRightIcon,
   UserIcon,
   DownloadIcon,
   DigiLockerIcon
@@ -405,7 +405,6 @@ export default function SubmitRequestPage() {
     const isValid = await trigger(['ministry', 'publicAuthority']);
     if (isValid) {
       setCurrentStep(2);
-      if (typeof window !== 'undefined') window.scrollTo({ top: 120, behavior: 'smooth' });
     }
   };
 
@@ -414,7 +413,6 @@ export default function SubmitRequestPage() {
     const isValid = await trigger(['applicantName', 'gender', 'email', 'mobile', 'address', 'pincode']);
     if (isValid) {
       setCurrentStep(3);
-      if (typeof window !== 'undefined') window.scrollTo({ top: 120, behavior: 'smooth' });
     }
   };
 
@@ -425,7 +423,6 @@ export default function SubmitRequestPage() {
       if (!isValid) return;
     }
     setCurrentStep(4);
-    if (typeof window !== 'undefined') window.scrollTo({ top: 120, behavior: 'smooth' });
   };
 
   // Form Submission handler connecting to /api/rti-request
@@ -458,7 +455,7 @@ export default function SubmitRequestPage() {
       let resData = {};
       try {
         resData = await res.json();
-      } catch (e) {}
+      } catch (e) { }
 
       const randomNum = Math.floor(500000 + Math.random() * 400000);
       const regNumber = `DOPT/R/2026/${resData.request?.request_number || randomNum}`;
@@ -620,12 +617,11 @@ export default function SubmitRequestPage() {
   };
 
   return (
-    <div className={`w-full min-h-screen py-6 sm:py-8 px-4 sm:px-6 lg:px-12 font-sans relative overflow-hidden transition-colors duration-500 ${
-      submittedSuccess 
-        ? 'bg-slate-50' 
-        : 'bg-[#FAFAFC]'
-    }`}>
-      
+    <div className={`w-full min-h-screen py-6 sm:py-8 px-4 sm:px-6 lg:px-12 font-sans relative overflow-hidden transition-colors duration-500 ${submittedSuccess
+      ? 'bg-slate-50'
+      : 'bg-[#FAFAFC]'
+      }`}>
+
       {/* Background Dotted Wave & Softened Transparency on Success Screen */}
       <DottedWave opacity={submittedSuccess ? 0.2 : 1} />
 
@@ -637,11 +633,11 @@ export default function SubmitRequestPage() {
           {/* Top Header Row */}
           <div className="flex justify-between items-start border-b border-slate-200 pb-3">
             <div className="flex items-center gap-3">
-              <Image 
-                src="/logo.png" 
-                alt="Emblem of India" 
-                width={36} 
-                height={54} 
+              <Image
+                src="/logo.png"
+                alt="Emblem of India"
+                width={36}
+                height={54}
                 className="h-10 w-auto object-contain shrink-0"
               />
               <div>
@@ -783,10 +779,10 @@ export default function SubmitRequestPage() {
               <p>This is a system generated receipt and does not require a signature.</p>
             </div>
             <div className="border border-slate-200 rounded-lg p-1.5 flex items-center gap-2 bg-slate-50">
-              <img 
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(`https://rti.gov.in/verify?reg=${submissionData.regNo}`)}`} 
-                alt="Verification QR Code" 
-                className="w-10 h-10 object-contain rounded shrink-0 border border-slate-200" 
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(`https://rti.gov.in/verify?reg=${submissionData.regNo}`)}`}
+                alt="Verification QR Code"
+                className="w-10 h-10 object-contain rounded shrink-0 border border-slate-200"
               />
               <div className="text-[9px]">
                 <strong className="block font-bold text-slate-800">Scan to verify request</strong>
@@ -826,10 +822,10 @@ export default function SubmitRequestPage() {
         </div>
 
         {/* Header Hero Area - Centered & Aligned exactly like all other pages */}
-        {!submittedSuccess && (
+        {/* {!submittedSuccess && (
           <div className="flex flex-col items-center text-center max-w-3xl mx-auto py-2">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B1C3F] tracking-tight mb-4 leading-tight">
-              {showLoginGate 
+              {showLoginGate
                 ? (loginT.loginRequiredTitle || (isHindi ? 'RTI आवेदन हेतु नागरिक लॉगिन अनिवार्य है' : 'Citizen Login Required to File RTI'))
                 : (sr.pageTitle || "Online RTI Application Filing")
               }
@@ -841,7 +837,7 @@ export default function SubmitRequestPage() {
               }
             </p>
           </div>
-        )}
+        )} */}
 
         {/* Unauthenticated Access Guard - Ultra Minimal Card */}
         {!submittedSuccess && showLoginGate && (
@@ -851,7 +847,7 @@ export default function SubmitRequestPage() {
                 {isHindi ? 'नागरिक पोर्टल प्रवेश आवश्यक है' : 'Citizen Portal Sign-In Required'}
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 font-medium max-w-md mx-auto leading-relaxed">
-                {isHindi 
+                {isHindi
                   ? 'कृपया अपना RTI आवेदन पत्र भरने एवं डिजिटल पावती प्राप्त करने के लिए लॉगिन करें।'
                   : 'Please sign in to access the statutory RTI request form and receive official digital acknowledgment receipts.'
                 }
@@ -877,7 +873,7 @@ export default function SubmitRequestPage() {
         )}
 
         {/* Authenticated Citizen Badge - Compact Pill */}
-        {!submittedSuccess && isAccessAllowed && user && (
+        {/* {!submittedSuccess && isAccessAllowed && user && (
           <div className="flex items-center justify-between bg-blue-50/70 border border-blue-200/70 rounded-lg px-3 py-1.5 text-xs mb-3">
             <div className="flex items-center gap-1.5 text-[#2563EB] text-[11px] font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse shrink-0" />
@@ -887,7 +883,7 @@ export default function SubmitRequestPage() {
               ✓ {isHindi ? 'सत्यापित' : 'Active Session'}
             </span>
           </div>
-        )}
+        )} */}
 
         {/* Minimal Stepper Header Bar */}
         {!submittedSuccess && isAccessAllowed && (
@@ -897,93 +893,82 @@ export default function SubmitRequestPage() {
               onClick={() => handleStepClick(1)}
               className="flex items-center gap-2 outline-none cursor-pointer transition-all"
             >
-              <span className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full font-bold flex items-center justify-center text-xs shrink-0 transition-all ${
-                isStepCompleted(1) 
-                  ? 'bg-emerald-600 text-white' 
-                  : isStepActive(1) 
-                    ? 'bg-[#2563EB] text-white ring-2 ring-blue-100' 
-                    : 'bg-slate-200/70 text-slate-500'
-              }`}>
+              <span className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full font-bold flex items-center justify-center text-xs shrink-0 transition-all ${isStepCompleted(1)
+                ? 'bg-emerald-600 text-white'
+                : isStepActive(1)
+                  ? 'bg-[#2563EB] text-white ring-2 ring-blue-100'
+                  : 'bg-slate-200/70 text-slate-500'
+                }`}>
                 {isStepCompleted(1) ? '✓' : '1'}
               </span>
-              <span className={`font-bold text-[11px] sm:text-xs transition-colors truncate ${
-                isStepActive(1) ? 'text-[#2563EB]' : isStepCompleted(1) ? 'text-emerald-700' : 'text-slate-500'
-              }`}>
+              <span className={`font-bold text-[11px] sm:text-xs transition-colors truncate ${isStepActive(1) ? 'text-[#2563EB]' : isStepCompleted(1) ? 'text-emerald-700' : 'text-slate-500'
+                }`}>
                 {sr.stepper?.step1 || "Select Authority"}
               </span>
             </button>
 
-            <div className={`hidden sm:block flex-1 border-t-2 border-dashed mx-1.5 transition-colors ${
-              isStepCompleted(1) ? 'border-emerald-500' : 'border-slate-200'
-            }`}></div>
+            <div className={`hidden sm:block flex-1 border-t-2 border-dashed mx-1.5 transition-colors ${isStepCompleted(1) ? 'border-emerald-500' : 'border-slate-200'
+              }`}></div>
 
             <button
               type="button"
               onClick={() => handleStepClick(2)}
               className="flex items-center gap-2 outline-none cursor-pointer transition-all"
             >
-              <span className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full font-bold flex items-center justify-center text-xs shrink-0 transition-all ${
-                isStepCompleted(2) 
-                  ? 'bg-emerald-600 text-white' 
-                  : isStepActive(2) 
-                    ? 'bg-[#2563EB] text-white ring-2 ring-blue-100' 
-                    : 'bg-slate-200/70 text-slate-500'
-              }`}>
+              <span className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full font-bold flex items-center justify-center text-xs shrink-0 transition-all ${isStepCompleted(2)
+                ? 'bg-emerald-600 text-white'
+                : isStepActive(2)
+                  ? 'bg-[#2563EB] text-white ring-2 ring-blue-100'
+                  : 'bg-slate-200/70 text-slate-500'
+                }`}>
                 {isStepCompleted(2) ? '✓' : '2'}
               </span>
-              <span className={`font-bold text-[11px] sm:text-xs transition-colors truncate ${
-                isStepActive(2) ? 'text-[#2563EB]' : isStepCompleted(2) ? 'text-emerald-700' : 'text-slate-500'
-              }`}>
+              <span className={`font-bold text-[11px] sm:text-xs transition-colors truncate ${isStepActive(2) ? 'text-[#2563EB]' : isStepCompleted(2) ? 'text-emerald-700' : 'text-slate-500'
+                }`}>
                 {sr.stepper?.step2 || "Applicant Details"}
               </span>
             </button>
 
-            <div className={`hidden sm:block flex-1 border-t-2 border-dashed mx-1.5 transition-colors ${
-              isStepCompleted(2) ? 'border-emerald-500' : 'border-slate-200'
-            }`}></div>
+            <div className={`hidden sm:block flex-1 border-t-2 border-dashed mx-1.5 transition-colors ${isStepCompleted(2) ? 'border-emerald-500' : 'border-slate-200'
+              }`}></div>
 
             <button
               type="button"
               onClick={() => handleStepClick(3)}
               className="flex items-center gap-2 outline-none cursor-pointer transition-all"
             >
-              <span className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full font-bold flex items-center justify-center text-xs shrink-0 transition-all ${
-                isStepCompleted(3) 
-                  ? 'bg-emerald-600 text-white' 
-                  : isStepActive(3) 
-                    ? 'bg-[#2563EB] text-white ring-2 ring-blue-100' 
-                    : 'bg-slate-200/70 text-slate-500'
-              }`}>
+              <span className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full font-bold flex items-center justify-center text-xs shrink-0 transition-all ${isStepCompleted(3)
+                ? 'bg-emerald-600 text-white'
+                : isStepActive(3)
+                  ? 'bg-[#2563EB] text-white ring-2 ring-blue-100'
+                  : 'bg-slate-200/70 text-slate-500'
+                }`}>
                 {isStepCompleted(3) ? '✓' : '3'}
               </span>
-              <span className={`font-bold text-[11px] sm:text-xs transition-colors truncate ${
-                isStepActive(3) ? 'text-[#2563EB]' : isStepCompleted(3) ? 'text-emerald-700' : 'text-slate-500'
-              }`}>
+              <span className={`font-bold text-[11px] sm:text-xs transition-colors truncate ${isStepActive(3) ? 'text-[#2563EB]' : isStepCompleted(3) ? 'text-emerald-700' : 'text-slate-500'
+                }`}>
                 {sr.stepper?.step3 || "BPL & Proof"}
               </span>
             </button>
 
-            <div className={`hidden sm:block flex-1 border-t-2 border-dashed mx-1.5 transition-colors ${
-              isStepCompleted(3) ? 'border-emerald-500' : 'border-slate-200'
-            }`}></div>
+            <div className={`hidden sm:block flex-1 border-t-2 border-dashed mx-1.5 transition-colors ${isStepCompleted(3) ? 'border-emerald-500' : 'border-slate-200'
+              }`}></div>
 
             <button
               type="button"
               onClick={() => handleStepClick(4)}
               className="flex items-center gap-2 outline-none cursor-pointer transition-all"
             >
-              <span className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full font-bold flex items-center justify-center text-xs shrink-0 transition-all ${
-                isStepCompleted(4)
-                  ? 'bg-emerald-600 text-white'
-                  : isStepActive(4) 
-                    ? 'bg-[#2563EB] text-white ring-2 ring-blue-100' 
-                    : 'bg-slate-200/70 text-slate-500'
-              }`}>
+              <span className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full font-bold flex items-center justify-center text-xs shrink-0 transition-all ${isStepCompleted(4)
+                ? 'bg-emerald-600 text-white'
+                : isStepActive(4)
+                  ? 'bg-[#2563EB] text-white ring-2 ring-blue-100'
+                  : 'bg-slate-200/70 text-slate-500'
+                }`}>
                 {isStepCompleted(4) ? '✓' : '4'}
               </span>
-              <span className={`font-bold text-[11px] sm:text-xs transition-colors truncate ${
-                isStepActive(4) ? 'text-[#2563EB]' : isStepCompleted(4) ? 'text-emerald-700' : 'text-slate-500'
-              }`}>
+              <span className={`font-bold text-[11px] sm:text-xs transition-colors truncate ${isStepActive(4) ? 'text-[#2563EB]' : isStepCompleted(4) ? 'text-emerald-700' : 'text-slate-500'
+                }`}>
                 {sr.stepper?.step4 || "Review & Submit"}
               </span>
             </button>
@@ -994,14 +979,14 @@ export default function SubmitRequestPage() {
         {/* REQUEST SUBMITTED SUCCESS PAGE (ANIMATED ORCHESTRATION)                    */}
         {/* ========================================================================= */}
         {submittedSuccess && submissionData ? (
-          <motion.div 
+          <motion.div
             variants={successContainerVariants}
             initial="hidden"
             animate="visible"
             className="space-y-6"
           >
             {/* Light Mint Green Hero Card */}
-            <motion.div 
+            <motion.div
               variants={successCardVariants}
               className="bg-[#ECFDF5]/90 backdrop-blur-md border border-emerald-200/80 rounded-3xl p-6 sm:p-10 shadow-sm text-center relative overflow-hidden space-y-6"
             >
@@ -1013,15 +998,15 @@ export default function SubmitRequestPage() {
               <motion.div variants={heroItemVariants} className="relative inline-flex items-center justify-center">
                 {/* Ambient Halo Glow */}
                 <div className="absolute w-24 h-24 sm:w-28 sm:h-28 bg-emerald-400/20 rounded-full blur-xl pointer-events-none" />
-                
+
                 {/* Expanding Ripple Ring */}
                 <motion.div
                   variants={rippleRingVariants}
                   className="absolute inset-0 rounded-full border-2 border-emerald-400 pointer-events-none"
                 />
-                
+
                 {/* Main Green Tick Circle */}
-                <motion.div 
+                <motion.div
                   variants={checkmarkCircleVariants}
                   className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-tr from-[#059669] via-[#10B981] to-[#34D399] rounded-full text-white flex items-center justify-center shadow-lg shadow-emerald-500/25 border-4 border-white/90 relative z-10"
                 >
@@ -1045,7 +1030,7 @@ export default function SubmitRequestPage() {
               </motion.div>
 
               {/* Registration Box Card */}
-              <motion.div 
+              <motion.div
                 variants={regCardVariants}
                 whileHover={{ scale: 1.01 }}
                 className="bg-white/95 backdrop-blur-xs border border-emerald-200/90 rounded-2xl p-5 sm:p-6 max-w-lg mx-auto shadow-sm text-center space-y-1 relative group hover:border-emerald-300 transition-colors z-10"
@@ -1084,8 +1069,8 @@ export default function SubmitRequestPage() {
                     <DownloadIcon className="w-4 h-4 shrink-0" />
                   )}
                   <span>
-                    {isGeneratingPdf 
-                      ? (sr.success?.downloadingPdf || "Downloading Receipt...") 
+                    {isGeneratingPdf
+                      ? (sr.success?.downloadingPdf || "Downloading Receipt...")
                       : (sr.success?.downloadBtn || sr.success?.printBtn || "Download Receipt")}
                   </span>
                 </motion.button>
@@ -1103,7 +1088,7 @@ export default function SubmitRequestPage() {
             </motion.div>
 
             {/* Request Summary & Timeline 2-Column Container */}
-            <motion.div 
+            <motion.div
               variants={successCardVariants}
               className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-2xs grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
             >
@@ -1119,7 +1104,7 @@ export default function SubmitRequestPage() {
                   </span>
                 </div>
 
-                <motion.div 
+                <motion.div
                   variants={summaryContainerVariants}
                   initial="hidden"
                   animate="visible"
@@ -1209,7 +1194,7 @@ export default function SubmitRequestPage() {
                   <span className="text-[10px] font-semibold text-slate-400">RTI Act Sec 7(1)</span>
                 </div>
 
-                <motion.div 
+                <motion.div
                   variants={timelineContainerVariants}
                   initial="hidden"
                   animate="visible"
@@ -1246,7 +1231,7 @@ export default function SubmitRequestPage() {
             </motion.div>
 
             {/* Bottom Important Information Banner */}
-            <motion.div 
+            <motion.div
               variants={successCardVariants}
               className="bg-[#F0F9FF]/90 backdrop-blur-md border border-blue-100 rounded-2xl p-6 shadow-2xs space-y-4"
             >
@@ -1256,31 +1241,31 @@ export default function SubmitRequestPage() {
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-xs text-slate-700">
-                <motion.div 
+                <motion.div
                   whileHover={{ y: -2 }}
                   className="space-y-1 p-3.5 rounded-xl bg-white/70 border border-blue-50/80 transition-all hover:bg-white hover:shadow-2xs"
                 >
-                  <strong className="font-bold text-slate-900 block flex items-center gap-1.5">
+                  <strong className="font-bold text-slate-900 flex items-center gap-1.5">
                     <span>⏱️</span> Standard Response Time
                   </strong>
                   <p className="text-slate-500 leading-relaxed text-[11px]">You will receive a response within 30 days from the date of submission.</p>
                 </motion.div>
 
-                <motion.div 
+                <motion.div
                   whileHover={{ y: -2 }}
                   className="space-y-1 p-3.5 rounded-xl bg-white/70 border border-blue-50/80 transition-all hover:bg-white hover:shadow-2xs"
                 >
-                  <strong className="font-bold text-slate-900 block flex items-center gap-1.5">
+                  <strong className="font-bold text-slate-900 flex items-center gap-1.5">
                     <span>🔍</span> Track Your Request
                   </strong>
                   <p className="text-slate-500 leading-relaxed text-[11px]">You can track the status of your request using the registration number.</p>
                 </motion.div>
 
-                <motion.div 
+                <motion.div
                   whileHover={{ y: -2 }}
                   className="space-y-1 p-3.5 rounded-xl bg-white/70 border border-blue-50/80 transition-all hover:bg-white hover:shadow-2xs"
                 >
-                  <strong className="font-bold text-slate-900 block flex items-center gap-1.5">
+                  <strong className="font-bold text-slate-900 flex items-center gap-1.5">
                     <span>💬</span> Citizen Support & Helpline
                   </strong>
                   <p className="text-slate-500 leading-relaxed text-[11px]">For inquiries, contact RTI Nodal Helpdesk or view the RTI Guide.</p>
@@ -1291,12 +1276,13 @@ export default function SubmitRequestPage() {
         ) : isAccessAllowed ? (
           /* Single Centered Column Layout with Subtle Card Wrapper around Form */
           <div className="max-w-3xl mx-auto">
-            
+
             {/* Subtle, Minimal Card Container around Form */}
-            <div className="bg-white border border-slate-200/70 rounded-2xl p-6 sm:p-9 shadow-xs space-y-6">
+            {/* <div className="bg-white border border-slate-200/70 rounded-2xl p-6 sm:p-9 shadow-xs space-y-6"> */}
+            <div className="p-6 sm:p-9 space-y-6">
 
               {/* Integrated Non-Competing Statutory Fee Header Strip (No Emojis!) */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100 text-xs">
+              {/* <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100 text-xs">
                 <div className="flex items-center gap-2">
                   <span className="font-extrabold text-[#0B1C3F] tracking-wide uppercase text-[11px]">
                     {sr.feeDetailsTitle || "Statutory Application Fee"}:
@@ -1309,21 +1295,20 @@ export default function SubmitRequestPage() {
                   </span>
                 </div>
 
-                {/* Emoji-free Payment Tags */}
                 <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-slate-600">
                   <span className="bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded-md">UPI / QR</span>
                   <span className="bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded-md">Debit / Credit</span>
                   <span className="bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded-md">Net Banking</span>
                   <span className="bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded-md">Wallets</span>
                 </div>
-              </div>
+              </div> */}
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 
                 <AnimatePresence mode="wait">
                   {/* STEP 1: SELECT PUBLIC AUTHORITY */}
                   {currentStep === 1 && (
-                    <motion.div 
+                    <motion.div
                       key="step1"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -1332,7 +1317,7 @@ export default function SubmitRequestPage() {
                       className="space-y-6"
                     >
                       {/* Step Header */}
-                      <div className="pb-3 border-b border-slate-200/80 flex items-center justify-between">
+                      {/* <div className="pb-3 border-b border-slate-200/80 flex items-center justify-between">
                         <div>
                           <span className="text-[10px] font-extrabold text-[#2563EB] uppercase tracking-widest block mb-0.5">
                             STEP 1 OF 4
@@ -1344,7 +1329,7 @@ export default function SubmitRequestPage() {
                         <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md uppercase tracking-wider">
                           {sr.mandatoryTag || "Mandatory Selection"}
                         </span>
-                      </div>
+                      </div> */}
 
                       {/* Department Quick Search */}
                       <div className="space-y-1.5">
@@ -1364,9 +1349,9 @@ export default function SubmitRequestPage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                           </svg>
                         </div>
-                        <p className="text-[11px] text-slate-500 font-normal">
+                        {/* <p className="text-[11px] text-slate-500 font-normal">
                           {sr.quickSearchNotice || "Type to filter or select from the official dropdown lists below"}
-                        </p>
+                        </p> */}
                       </div>
 
                       {/* Dropdown Selects Grid */}
@@ -1380,9 +1365,8 @@ export default function SubmitRequestPage() {
                             {...register('ministry', {
                               onChange: (e) => setValue('publicAuthority', '')
                             })}
-                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${
-                              errors.ministry ? 'border-red-500' : 'border-slate-300'
-                            }`}
+                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${errors.ministry ? 'border-red-500' : 'border-slate-300'
+                              }`}
                           >
                             <option value="">{sr.ministryPlaceholder || "-- Select Ministry / Department --"}</option>
                             {filteredCatalog.map((group, idx) => (
@@ -1404,10 +1388,9 @@ export default function SubmitRequestPage() {
                             suppressHydrationWarning
                             {...register('publicAuthority')}
                             disabled={!selectedMinistry}
-                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${
-                              !selectedMinistry ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200' :
+                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${!selectedMinistry ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200' :
                               errors.publicAuthority ? 'border-red-500' : 'border-slate-300'
-                            }`}
+                              }`}
                           >
                             <option value="">{sr.publicAuthPlaceholder || "-- Select Public Authority --"}</option>
                             {availableAuthorities.map((auth, idx) => (
@@ -1448,7 +1431,7 @@ export default function SubmitRequestPage() {
 
                   {/* STEP 2: APPLICANT PERSONAL DETAILS */}
                   {currentStep === 2 && (
-                    <motion.div 
+                    <motion.div
                       key="step2"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -1457,7 +1440,7 @@ export default function SubmitRequestPage() {
                       className="space-y-6"
                     >
                       {/* Step Header */}
-                      <div className="pb-3 border-b border-slate-200/80 flex flex-wrap items-center justify-between gap-2">
+                      {/* <div className="pb-3 border-b border-slate-200/80 flex flex-wrap items-center justify-between gap-2">
                         <div>
                           <span className="text-[10px] font-extrabold text-[#2563EB] uppercase tracking-widest block mb-0.5">
                             STEP 2 OF 4
@@ -1466,15 +1449,22 @@ export default function SubmitRequestPage() {
                             {sr.personalTitle || "Applicant Personal Details"}
                           </h2>
                         </div>
-
+                      </div> */}
+                      <div className='flex justify-center'>
                         <button
                           type="button"
                           onClick={handleDigilockerAutofill}
-                          className="border border-blue-200 text-[#2563EB] bg-blue-50/60 hover:bg-blue-100/80 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+                          className="border border-blue-200 bg-[#2563EB] text-white hover:bg-blue-800 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
                         >
-                          <DigiLockerIcon className="w-4 h-4" />
-                          <span>{isDigilockerUsed ? (sr.digilockerVerified || "✓ DigiLocker Verified") : (sr.digilockerBtn || "Auto-Fill via DigiLocker")}</span>
+                          <DigiLockerIcon className="w-5" />
+                          <span>{isDigilockerUsed ? (sr.digilockerVerified || "DigiLocker Verified") : (sr.digilockerBtn || "Auto-Fill via DigiLocker")}</span>
                         </button>
+                      </div>
+
+                      <div className='flex opacity-50 items-center gap-2 px-5 text-sm'>
+                        <div className='flex-1 h-px shadow-[inset_0_-0.1px_0_0_#000000]'></div>
+                        or
+                        <div className='flex-1 h-px shadow-[inset_0_-0.1px_0_0_#000000]'></div>
                       </div>
 
                       {/* Inputs Grid */}
@@ -1488,9 +1478,8 @@ export default function SubmitRequestPage() {
                             suppressHydrationWarning
                             {...register('applicantName')}
                             placeholder={sr.fullNamePlaceholder || "Enter full legal name"}
-                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${
-                              errors.applicantName ? 'border-red-500' : 'border-slate-300'
-                            }`}
+                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${errors.applicantName ? 'border-red-500' : 'border-slate-300'
+                              }`}
                           />
                           {errors.applicantName && (
                             <p className="text-[11px] text-red-600 mt-1.5 font-medium flex items-center gap-1">
@@ -1524,21 +1513,16 @@ export default function SubmitRequestPage() {
                               suppressHydrationWarning
                               {...register('email')}
                               placeholder={sr.emailPlaceholder || "name@example.com"}
-                              className={`w-full bg-white border rounded-lg pl-3.5 pr-9 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${
-                                errors.email ? 'border-red-500' : 'border-slate-300'
-                              }`}
+                              className={`w-full bg-white border rounded-lg pl-3.5 pr-9 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${errors.email ? 'border-red-500' : 'border-slate-300'
+                                }`}
                             />
                             <span className="absolute right-3 text-slate-400 font-bold text-xs">✉</span>
                           </div>
-                          {errors.email ? (
+                          {errors.email && (
                             <p className="text-[11px] text-red-600 mt-1.5 font-medium flex items-center gap-1">
                               <span>⚠</span> {errors.email.message}
                             </p>
-                          ) : user?.email ? (
-                            <p className="text-[10px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
-                              <span>✓</span> {isHindi ? 'लॉगिन ईमेल से स्वतः भरा गया' : 'Auto-filled from your login Email ID'}
-                            </p>
-                          ) : null}
+                          )}
                         </div>
 
                         <div>
@@ -1550,9 +1534,8 @@ export default function SubmitRequestPage() {
                             suppressHydrationWarning
                             {...register('mobile')}
                             placeholder={sr.mobilePlaceholder || "Enter 10-digit mobile number"}
-                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${
-                              errors.mobile ? 'border-red-500' : 'border-slate-300'
-                            }`}
+                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${errors.mobile ? 'border-red-500' : 'border-slate-300'
+                              }`}
                           />
                           {errors.mobile && (
                             <p className="text-[11px] text-red-600 mt-1.5 font-medium flex items-center gap-1">
@@ -1566,13 +1549,12 @@ export default function SubmitRequestPage() {
                             {sr.postalAddressLabel || "POSTAL ADDRESS"} <span className="text-red-500 font-bold">*</span>
                           </label>
                           <textarea
-                            rows={2}
+                            rows={3}
                             suppressHydrationWarning
                             {...register('address')}
                             placeholder={sr.postalAddressPlaceholder || "House/Flat No., Street, Area, City/District, State"}
-                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${
-                              errors.address ? 'border-red-500' : 'border-slate-300'
-                            }`}
+                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${errors.address ? 'border-red-500' : 'border-slate-300'
+                              }`}
                           />
                           {errors.address && (
                             <p className="text-[11px] text-red-600 mt-1.5 font-medium flex items-center gap-1">
@@ -1590,9 +1572,8 @@ export default function SubmitRequestPage() {
                             suppressHydrationWarning
                             {...register('pincode')}
                             placeholder={sr.pincodePlaceholder || "Enter 6-digit pincode"}
-                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${
-                              errors.pincode ? 'border-red-500' : 'border-slate-300'
-                            }`}
+                            className={`w-full bg-white border rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${errors.pincode ? 'border-red-500' : 'border-slate-300'
+                              }`}
                           />
                           {errors.pincode && (
                             <p className="text-[11px] text-red-600 mt-1.5 font-medium flex items-center gap-1">
@@ -1625,7 +1606,7 @@ export default function SubmitRequestPage() {
 
                   {/* STEP 3: BPL & SUPPORTING DOCUMENTS */}
                   {currentStep === 3 && (
-                    <motion.div 
+                    <motion.div
                       key="step3"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -1634,14 +1615,14 @@ export default function SubmitRequestPage() {
                       className="space-y-6"
                     >
                       {/* Step Header */}
-                      <div className="pb-3 border-b border-slate-200/80">
+                      {/* <div className="pb-3 border-b border-slate-200/80">
                         <span className="text-[10px] font-extrabold text-[#2563EB] uppercase tracking-widest block mb-0.5">
                           STEP 3 OF 4
                         </span>
                         <h2 className="text-base sm:text-lg font-extrabold text-[#0B1C3F]">
                           {sr.bplTitle || "BPL Category & Fee Exemption"}
                         </h2>
-                      </div>
+                      </div> */}
 
                       <div className="space-y-4">
                         <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
@@ -1724,7 +1705,7 @@ export default function SubmitRequestPage() {
 
                   {/* STEP 4: RTI APPLICATION TEXT & REVIEW */}
                   {currentStep === 4 && (
-                    <motion.div 
+                    <motion.div
                       key="step4"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -1733,14 +1714,14 @@ export default function SubmitRequestPage() {
                       className="space-y-6"
                     >
                       {/* Step Header */}
-                      <div className="pb-3 border-b border-slate-200/80">
+                      {/* <div className="pb-3 border-b border-slate-200/80">
                         <span className="text-[10px] font-extrabold text-[#2563EB] uppercase tracking-widest block mb-0.5">
                           STEP 4 OF 4
                         </span>
                         <h2 className="text-base sm:text-lg font-extrabold text-[#0B1C3F]">
                           {sr.rtiTextTitle || "RTI Application Text & Review"}
                         </h2>
-                      </div>
+                      </div> */}
 
                       {/* Brief Summary Box */}
                       <div className="border-l-2 border-[#2563EB] pl-4 py-1.5 space-y-1.5">
@@ -1764,8 +1745,8 @@ export default function SubmitRequestPage() {
                             onClick={() => setShowAiAssistant(!showAiAssistant)}
                             className="inline-flex items-center gap-1.5 text-xs font-bold text-[#2563EB] hover:text-[#1d4ed8] bg-blue-50 hover:bg-blue-100/80 border border-blue-200 px-3 py-1.5 rounded-lg transition-all cursor-pointer select-none"
                           >
-                            <span>{showAiAssistant 
-                              ? (isHindi ? 'सहायक बंद करें' : 'Close AI Assistant') 
+                            <span>{showAiAssistant
+                              ? (isHindi ? 'सहायक बंद करें' : 'Close AI Assistant')
                               : (isHindi ? 'एआई प्रारूप सहायक' : 'Use AI Format Assistant')
                             }</span>
                           </button>
@@ -1774,23 +1755,23 @@ export default function SubmitRequestPage() {
                         {/* Expandable AI Assistant Box */}
                         {showAiAssistant && (
                           <div className="bg-slate-50 border border-blue-100 rounded-xl p-4 sm:p-5 space-y-4 mb-4 animate-in slide-in-from-top-2 duration-200">
-                            <div className="flex items-start gap-3">
+                            {/* <div className="flex items-start gap-3">
                               <div>
                                 <strong className="block text-xs font-bold text-[#0B1C3F]">
                                   {isHindi ? 'एआई आरटीआई प्रारूपक (AI RTI Formatter)' : 'AI RTI Application Formatter'}
                                 </strong>
                                 <span className="text-[11px] text-slate-500 block leading-relaxed mt-0.5">
-                                  {isHindi 
-                                    ? 'अपनी पूछताछ साधारण शब्दों या कच्चे इनपुट में लिखें। एआई इसे एक औपचारिक सरकारी प्रारूप में बदल देगा।' 
+                                  {isHindi
+                                    ? 'अपनी पूछताछ साधारण शब्दों या कच्चे इनपुट में लिखें। एआई इसे एक औपचारिक सरकारी प्रारूप में बदल देगा।'
                                     : 'Describe what you want to ask in simple, everyday words. The AI will convert it into a formal, legal RTI structure.'
                                   }
                                 </span>
                               </div>
-                            </div>
+                            </div> */}
 
                             <div className="space-y-2">
                               <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider">
-                                {isHindi ? 'साधारण शब्दों में अपना अनुरोध लिखें' : 'Write your request in simple words / rough notes'}
+                                {isHindi ? 'साधारण शब्दों में अपना अनुरोध लिखें' : 'Write your request in simple words '}
                               </label>
                               <textarea
                                 rows={3}
@@ -1799,8 +1780,8 @@ export default function SubmitRequestPage() {
                                   setAiInput(e.target.value);
                                   if (validationError) setValidationError('');
                                 }}
-                                placeholder={isHindi 
-                                  ? "उदा: मैं जानना चाहता हूँ कि मेरे वार्ड नंबर 12 की सड़क की मरम्मत क्यों रुकी हुई है, और इसके लिए कितना बजट जारी हुआ था।" 
+                                placeholder={isHindi
+                                  ? "उदा: मैं जानना चाहता हूँ कि मेरे वार्ड नंबर 12 की सड़क की मरम्मत क्यों रुकी हुई है, और इसके लिए कितना बजट जारी हुआ था।"
                                   : "e.g., I want to check why the road work in Ward 12 is delayed, how much money was allocated for it, and who is the contractor."
                                 }
                                 className="w-full bg-white border border-slate-300 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
@@ -1808,7 +1789,7 @@ export default function SubmitRequestPage() {
                             </div>
 
                             {/* Suggestion LLM Chips */}
-                            {aiSuggestions.length > 0 && (
+                            {/* {aiSuggestions.length > 0 && (
                               <div className="space-y-1.5 pt-1">
                                 <span className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
                                   <span>💡</span> {isHindi ? 'सुझाए गए आरटीआई विषय (कीवर्ड्स जोड़ने हेतु क्लिक करें):' : 'Suggested RTI Keywords (Click to add to your query):'}
@@ -1830,7 +1811,7 @@ export default function SubmitRequestPage() {
                                   ))}
                                 </div>
                               </div>
-                            )}
+                            )} */}
 
                             {/* Verification LLM Non-Genuine Warning Alert */}
                             {validationError && (
@@ -1912,9 +1893,8 @@ export default function SubmitRequestPage() {
                           suppressHydrationWarning
                           {...register('queryText')}
                           placeholder={sr.rtiTextPlaceholder || "Clearly describe the specific information, public records, certified copies, or decision records requested under Section 6(1)..."}
-                          className={`w-full bg-white border rounded-xl p-4 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${
-                            errors.queryText ? 'border-red-500' : 'border-slate-300'
-                          }`}
+                          className={`w-full bg-white border rounded-xl p-4 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all ${errors.queryText ? 'border-red-500' : 'border-slate-300'
+                            }`}
                         />
                         <div className="flex justify-between items-center text-[11px] text-slate-500 font-medium">
                           <span>{sr.maxChars || "Max 3000 characters"}</span>
